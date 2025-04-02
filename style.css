@@ -228,6 +228,7 @@ body.dark-mode {
     height: calc(100vh - 70px);
     margin-top: 70px;
     margin-left: 45px;
+    overflow: hidden;
 }
 
 @media (max-width: 480px) {
@@ -258,14 +259,14 @@ body.dark-mode {
     position: relative;
     overflow: hidden;
     transition: border-color 0.3s;
+    -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 480px) {
     .container {
         width: 90vw;
-        height: calc(90vw * 1.15);
+        height: 460px;
         max-width: 400px;
-        max-height: 460px;
         margin: 0 auto;
     }
 
