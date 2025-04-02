@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MineScroll</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="popup" id="startPopup">
+        <p>Are you a scrolling pro? Let's see if you can keep up!</p>
+        <button id="startPlayButton">Play</button>
+    </div>
+
+    <div class="header">
+        <div class="hamburger-menu">
+            <div class="hamburger-icon" id="hamburgerIcon">
+                <span class="hamburger-line line1"></span>
+                <span class="hamburger-line line2"></span>
+                <span class="hamburger-line line3"></span>
+            </div>
+            <div class="mobile-menu">
+                <div class="icon-btn mobile-help-btn" id="mobileHelpBtn">
+                    <img src="https://cdn-icons-png.flaticon.com/512/545/545705.png" alt="Help" class="icon">
+                </div>
+                <div class="icon-btn mobile-plus-btn" id="mobilePlusBtn">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1828/1828925.png" alt="Plus" class="icon">
+                </div>
+                <div class="icon-btn mobile-fullscreen-btn" id="mobileFullscreenBtn">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2089/2089670.png" alt="Fullscreen" class="icon">
+                </div>
+                <div class="icon-btn mobile-settings-btn" id="mobileSettingsBtn">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2099/2099058.png" alt="Settings" class="icon">
+                </div>
+            </div>
+        </div>
+
+        <div class="left-group">
+            <div class="icon-btn" id="helpBtn">
+                <img src="https://cdn-icons-png.flaticon.com/512/545/545705.png" alt="Help" class="icon">
+            </div>
+            <div class="icon-btn" id="plusBtn">
+                <img src="https://cdn-icons-png.flaticon.com/512/1828/1828925.png" alt="Plus" class="icon">
+            </div>
+            <div class="text-btn" id="scoreBtn">Score :<span id="scoreValue">0</span></div>
+        </div>
+        
+        <div class="center-scores">
+            <div class="text-btn mobile-score-btn">Score :<span id="mobileScoreValue">0</span></div>
+            <div class="text-btn mobile-best-btn"><span id="mobileBestScoreValue">0</span>: Best</div>
+        </div>
+
+        <div class="right-group">
+            <div class="text-btn"><span id="bestScoreValue">0</span>: Best</div>
+            <div class="icon-btn" id="fullscreenBtn">
+                <img src="https://cdn-icons-png.flaticon.com/512/2089/2089670.png" alt="Fullscreen" class="icon">
+            </div>
+            <div class="icon-btn" id="settingsBtn">
+                <img src="https://cdn-icons-png.flaticon.com/512/2099/2099058.png" alt="Settings" class="icon">
+            </div>
+        </div>
+    </div>
+
+    <div class="popup" id="helpPopup">
+        <div class="popup-header">
+            How to play
+            <div class="close-btn" id="closeHelpPopup"><span class="close-icon">&times;</span></div>
+        </div>
+        <div class="how-to-play-content">
+            <ol>
+                <li><strong>Start:</strong> Click the "Play" button.</li>
+                <li><strong>Goal:</strong> Keep the blinking cursor inside the game box.</li>
+                <li><strong>Controls:</strong> Use the arrow button (↓) or "S" key to scroll the page inside box down if the cursor moves too far up.</li>
+                <p>On mobile or touch screens, swipe up to scroll the page.</p>
+                <li><strong>Game Over:</strong> If the cursor goes outside (from top or bottom) the box, the game ends. Click "Restart" to play again.</li>
+                <li><strong>Setting Content:</strong> Hard mode, Sound, Dark mode, Cursor color and Cursor size</li>
+                <p><strong>Stay quick and keep the cursor in the box for as long as you can!</strong></p>
+            </ol>
+        </div>
+    </div>
+
+    <div class="popup" id="plusPopup">
+        <div class="popup-header">
+            Input your text
+            <div class="close-btn" id="closePlusPopup"><span class="close-icon">&times;</span></div>
+        </div>
+        <div class="input-section">
+            <div style="display: flex; align-items: center;">
+                <input type="text" placeholder="Enter up to 50 characters..." id="plusInput" maxlength="50">
+                <span class="max-text">max.50</span>
+            </div>
+            <div class="number-input-section">
+                <label for="numberInput">Times text display:</label>
+                <input type="number" id="numberInput" min="1" max="100" value="1">
+            </div>
+            <button id="placeButton">Place</button>
+        </div>
+    </div>
+
+    <div class="popup" id="leaderboardPopup">
+        <div class="popup-header">
+            Leaderboard
+            <div class="close-btn" id="closeLeaderboardPopup"><span class="close-icon">&times;</span></div>
+        </div>
+    </div>
+
+    <div class="popup" id="settingsPopup">
+        <div class="popup-header">
+            Settings
+            <div class="close-btn" id="closeSettingsPopup"><span class="close-icon">&times;</span></div>
+        </div>
+        <div class="settings-content">
+            <div class="settings-item">
+                <div class="settings-title">Hard Mode</div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="hardModeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <div class="settings-title">Sound</div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="soundToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <div class="settings-title">Dark Mode</div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <div class="settings-title">Cursor Color</div>
+                <div class="color-options">
+                    <div class="color-option black" data-color="black"></div>
+                    <div class="color-option blue" data-color="#4285F4"></div>
+                    <div class="color-option red" data-color="#DB4437"></div>
+                    <div class="color-option yellow" data-color="#F4B400"></div>
+                    <div class="color-option green" data-color="#0F9D58"></div>
+                </div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-title">Cursor Size</div>
+                <div class="cursor-size-input">
+                    <input type="number" id="cursorSizeInput" min="1" max="5" step="0.1" value="2">
+                    <span class="cursor-size-text">px</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-wrapper">
+        <div class="container">
+            <div class="content">
+                <div class="cursor" id="cursor"></div>
+                <div id="userTextContainer" class="user-text-container"></div>
+                <div id="dictionaryWordsContainer" class="dictionary-words-container"></div>
+            </div>
+        </div>
+        <div class="arrow-button" id="arrowButton"></div>
+    </div>
+
+    <button class="play-button" id="playButton">Play</button>
+    <div class="popup" id="popup">
+        <p>Game Over!</p>
+        <p id="scoreMessage">Congratulations Scroller, You have scrolled <span id="finalScore">0</span> pages</p>
+        <button id="restartButton">Restart</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
