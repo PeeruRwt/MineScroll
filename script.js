@@ -34,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('mobileScoreValue').textContent = score;
     document.getElementById('mobileBestScoreValue').textContent = bestScore;
     
-    // Initialize cursor settings
     const savedCursorSize = localStorage.getItem('cursorSize') || '2';
     const savedCursorColor = localStorage.getItem('cursorColor') || 'black';
     
@@ -42,21 +41,23 @@ document.addEventListener("DOMContentLoaded", () => {
     cursor.style.width = `${savedCursorSize}px`;
     cursor.style.backgroundColor = savedCursorColor;
     
-    // Set selected color
     document.querySelectorAll('.color-option').forEach(option => {
         if (option.dataset.color === savedCursorColor) {
             option.classList.add('selected');
         }
     });
-    
-    // Add event listener for cursor size input with proper validation
+
     document.getElementById('cursorSizeInput').addEventListener('input', function() {
         let size = parseFloat(this.value);
         if (isNaN(size)) {
             size = 2;
         }
-        size = Math.max(1, Math.min(5, size));
-        this.value = size.toFixed(1);
+        if (size > 5) {
+            size = 5;
+            this.value = 5;
+        } else {
+            this.value = size; 
+        }
         cursor.style.width = `${size}px`;
         localStorage.setItem('cursorSize', size);
     });
@@ -199,7 +200,6 @@ hardModeToggle.addEventListener("change", function () {
     isHardMode = this.checked;
 });
 
-// Cursor color selection functionality
 const colorOptions = document.querySelectorAll('.color-option');
 colorOptions.forEach(option => {
     option.addEventListener('click', function() {
@@ -207,7 +207,6 @@ colorOptions.forEach(option => {
         cursor.style.backgroundColor = color;
         localStorage.setItem('cursorColor', color);
         
-        // Update selected state
         colorOptions.forEach(opt => opt.classList.remove('selected'));
         this.classList.add('selected');
     });
@@ -244,7 +243,7 @@ const maxPlacementsPerVisit = 5;
 let occupiedLines = new Set();
 
 const dictionaryWords = [
-   'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I',
+    'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I',
     'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
     'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
     'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what',
@@ -345,7 +344,6 @@ const dictionaryWords = [
     'throwing', 'understand', 'understands', 'understood', 'understanding', 'wake', 'wakes', 'woke', 'woken', 'waking',
     'wear', 'wears', 'wore', 'worn', 'wearing', 'win', 'wins', 'won', 'winning', 'write',
     'writes', 'wrote', 'written', 'writing'
-   
 ];
 
 const totalPages = 625;
@@ -741,6 +739,8 @@ function resetGame() {
     cursor.style.top = '0px';
     cursor.style.left = '0px';
     cursor.classList.remove('no-blink');
+    
+    // Restore saved cursor settings
     const savedCursorSize = localStorage.getItem('cursorSize') || '2';
     const savedCursorColor = localStorage.getItem('cursorColor') || 'black';
     cursor.style.width = `${savedCursorSize}px`;

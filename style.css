@@ -1,6 +1,7 @@
 * {
     font-family: 'Kodchasan', sans-serif;
     user-select: none;
+    overscroll-behavior: none;
 }
 
 body {
@@ -9,6 +10,8 @@ body {
     background-color: #fff;
     color: #000;
     transition: background-color 0.3s, color 0.3s;
+    overscroll-behavior: none;
+    touch-action: manipulation;
 }
 
 body.dark-mode {
@@ -138,15 +141,6 @@ body.dark-mode {
     .dark-mode .mobile-menu {
         background-color: #1A73E8;
     }
-
-    /* Mobile specific score buttons */
-    .mobile-score-btn, .mobile-best-btn {
-        background-color: #D2B48C !important;
-    }
-
-    .mobile-score-btn:hover, .mobile-best-btn:hover {
-        background-color: #F5F5DC !important;
-    }
 }
 
 @media (max-width: 370px) {
@@ -213,12 +207,12 @@ body.dark-mode {
 }
 
 #scoreBtn, .right-group .text-btn, .mobile-score-btn, .mobile-best-btn {
-    background-color: #F5F5DC;
+    background-color: #D2B48C;
     cursor: pointer;
 }
 
 #scoreBtn:hover, .right-group .text-btn:hover, .mobile-score-btn:hover, .mobile-best-btn:hover {
-    background-color: #D2B48C;
+    background-color: #F5F5DC;
 }
 
 .dark-mode #scoreBtn, .dark-mode .right-group .text-btn, .dark-mode .mobile-score-btn, .dark-mode .mobile-best-btn {
@@ -238,6 +232,7 @@ body.dark-mode {
     margin-top: 70px;
     margin-left: 45px;
     overflow: hidden;
+    overscroll-behavior: none;
 }
 
 @media (max-width: 480px) {
@@ -269,6 +264,7 @@ body.dark-mode {
     overflow: hidden;
     transition: border-color 0.3s;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
 }
 
 @media (max-width: 480px) {
@@ -323,6 +319,7 @@ body.dark-mode {
         radial-gradient(circle at 90% 90%, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
     background-size: 100% 100%, 100% 100%, 100% 20px;
+    overscroll-behavior: none;
 }
 
 .dark-mode .content {
