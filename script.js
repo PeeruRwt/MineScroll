@@ -49,14 +49,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
     
-    // Add event listener for cursor size input
+    // Add event listener for cursor size input with proper validation
     document.getElementById('cursorSizeInput').addEventListener('input', function() {
         let size = parseFloat(this.value);
         if (isNaN(size)) {
             size = 2;
         }
         size = Math.max(1, Math.min(5, size));
-        this.value = size;
+        this.value = size.toFixed(1);
         cursor.style.width = `${size}px`;
         localStorage.setItem('cursorSize', size);
     });
@@ -187,7 +187,7 @@ soundToggle.addEventListener("change", function () {
         cursorSound.volume = 0;
         gameEndSound.volume = 0;
     } else {
-        cursorSound.volume = 0.5;
+        cursorSound.volume = 0.7;
         gameEndSound.volume = 1;
     }
 });
@@ -244,7 +244,7 @@ const maxPlacementsPerVisit = 5;
 let occupiedLines = new Set();
 
 const dictionaryWords = [
-    'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I',
+   'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I',
     'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
     'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
     'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what',
@@ -345,6 +345,7 @@ const dictionaryWords = [
     'throwing', 'understand', 'understands', 'understood', 'understanding', 'wake', 'wakes', 'woke', 'woken', 'waking',
     'wear', 'wears', 'wore', 'worn', 'wearing', 'win', 'wins', 'won', 'winning', 'write',
     'writes', 'wrote', 'written', 'writing'
+   
 ];
 
 const totalPages = 625;
@@ -622,7 +623,7 @@ function changeCursorColor() {
 
 function triggerGameEndVibration() {
     if ("vibrate" in navigator) {
-        navigator.vibrate([500, 100, 500]);
+        navigator.vibrate([300, 50, 300]);
     }
 }
 
@@ -740,8 +741,6 @@ function resetGame() {
     cursor.style.top = '0px';
     cursor.style.left = '0px';
     cursor.classList.remove('no-blink');
-    
-    // Restore saved cursor settings
     const savedCursorSize = localStorage.getItem('cursorSize') || '2';
     const savedCursorColor = localStorage.getItem('cursorColor') || 'black';
     cursor.style.width = `${savedCursorSize}px`;
