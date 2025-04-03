@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'Kodchasan';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/kodchasan/v7/1cX0aUPOAJv9sG4I-DJeI1OQ.woff2) format('woff2');
+}
+
 * {
     font-family: 'Kodchasan', sans-serif;
     user-select: none;
@@ -8,7 +16,11 @@ body {
     padding: 0;
     background-color: #fff;
     color: #000;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s, color 0.3s, filter 0.3s ease;
+}
+
+body.popup-background-blur {
+    filter: blur(2px);
 }
 
 body.dark-mode {
@@ -108,7 +120,7 @@ body.dark-mode {
         flex-direction: column;
         gap: 5px;
         padding: 5px;
-        z-index: 1001;
+        z-index: 1003;
     }
 
     .mobile-menu.show {
@@ -204,12 +216,12 @@ body.dark-mode {
 }
 
 #scoreBtn, .right-group .text-btn, .mobile-score-btn, .mobile-best-btn {
-    background-color: #F5F5DC;
+    background-color: #D2B48C;
     cursor: pointer;
 }
 
 #scoreBtn:hover, .right-group .text-btn:hover, .mobile-score-btn:hover, .mobile-best-btn:hover {
-    background-color: #D2B48C;
+    background-color: #F5F5DC;
 }
 
 .dark-mode #scoreBtn, .dark-mode .right-group .text-btn, .dark-mode .mobile-score-btn, .dark-mode .mobile-best-btn {
@@ -246,6 +258,13 @@ body.dark-mode {
         transform: translateX(-50%);
         margin-left: 0;
         margin-top: 20px;
+        width: 60px;
+        height: 60px;
+    }
+
+    .arrow-button::after {
+        font-size: 45px;
+        margin-top: -3px;
     }
 }
 
@@ -260,6 +279,7 @@ body.dark-mode {
     overflow: hidden;
     transition: border-color 0.3s;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
 }
 
 @media (max-width: 480px) {
@@ -415,7 +435,7 @@ body.dark-mode {
     border-radius: 6px;
     z-index: 1002;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s, color 0.3s, opacity 0.3s;
 }
 
 .dark-mode .popup {
@@ -425,33 +445,59 @@ body.dark-mode {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-#startPopup {
-    display: block;
-    text-align: center;
-}
-
-#startPopup p {
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 30px;
     font-size: 18px;
-    margin-bottom: 20px;
-}
-
-#startPlayButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: black;
+    font-weight: bold;
     color: white;
+    background: linear-gradient(145deg, #2e8b57, #3cb371);
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: transform 0.1s, background-color 0.2s;
+    z-index: 10;
+    box-shadow: 0 6px 0 #2a7a4d,
+                0 8px 10px rgba(0,0,0,0.3);
+    transition: all 0.1s ease;
+    perspective: 500px;
+    transform-style: preserve-3d;
 }
 
-#startPlayButton:hover {
-    background-color: #333;
+.play-button:active {
+    transform: translate(-50%, -45%);
+    box-shadow: 0 2px 0 #2a7a4d,
+                0 3px 5px rgba(0,0,0,0.3);
+    background: linear-gradient(145deg, #3cb371, #2e8b57);
 }
 
-#startPlayButton:active {
-    transform: scale(0.98);
+.button-text {
+    position: relative;
+    z-index: 2;
+    display: block;
+    transform: translateZ(20px);
+}
+
+.button-shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.1);
+    border-radius: 10px;
+    transform: translateZ(-5px);
+    filter: blur(2px);
+}
+
+.play-button:hover {
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+.play-button:active .button-text {
+    transform: translateZ(15px);
 }
 
 #popup {
@@ -490,6 +536,9 @@ body.dark-mode {
     font-size: 18px;
     color: #1e3a8a;
     position: relative;
+    margin: -20px -20px 20px -20px;
+    width: calc(100% + 40px);
+    box-sizing: border-box;
 }
 
 .dark-mode .popup-header {
@@ -548,6 +597,7 @@ body.dark-mode {
     align-items: center;
     gap: 10px;
     margin-top: 10px;
+    position: relative;
 }
 
 .number-input-section label {
@@ -597,6 +647,15 @@ body.dark-mode {
 
 .dark-mode .input-section .max-text {
     color: #E0E0E0;
+}
+
+#timesMaxText {
+    position: absolute;
+    right: 0;
+    font-size: 10px;
+    color: #DB4437;
+    opacity: 0;
+    transition: opacity 0.3s;
 }
 
 .settings-item {
@@ -935,6 +994,11 @@ input:checked + .slider:before {
 
 .color-option.green {
     background-color: #0F9D58;
+}
+
+.color-option.white {
+    background-color: white;
+    border: 1px solid #ccc;
 }
 
 .cursor-size-input {
