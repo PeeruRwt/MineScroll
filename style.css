@@ -16,11 +16,7 @@ body {
     padding: 0;
     background-color: #fff;
     color: #000;
-    transition: background-color 0.3s, color 0.3s, filter 0.3s ease;
-}
-
-body.popup-background-blur {
-    filter: blur(2px);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 body.dark-mode {
@@ -120,7 +116,7 @@ body.dark-mode {
         flex-direction: column;
         gap: 5px;
         padding: 5px;
-        z-index: 1003;
+        z-index: 1001;
     }
 
     .mobile-menu.show {
@@ -435,7 +431,7 @@ body.dark-mode {
     border-radius: 6px;
     z-index: 1002;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, color 0.3s, opacity 0.3s;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .dark-mode .popup {

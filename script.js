@@ -179,19 +179,11 @@ document.addEventListener("DOMContentLoaded", () => {
         e.stopPropagation();
         this.classList.toggle('active');
         mobileMenu.classList.toggle('show');
-        if (mobileMenu.classList.contains('show')) {
-            document.body.classList.add('popup-background-blur');
-        } else {
-            document.body.classList.remove('popup-background-blur');
-        }
     });
 
-    document.addEventListener('click', function(e) {
-        if (!mobileMenu.contains(e.target) && !hamburgerIcon.contains(e.target)) {
-            hamburgerIcon.classList.remove('active');
-            mobileMenu.classList.remove('show');
-            document.body.classList.remove('popup-background-blur');
-        }
+    document.addEventListener('click', function() {
+        hamburgerIcon.classList.remove('active');
+        mobileMenu.classList.remove('show');
     });
 
     document.getElementById('mobileScoreValue').textContent = score;
@@ -287,7 +279,6 @@ for (const [btnId, popupId] of Object.entries(popups)) {
             }
             hamburgerIcon.classList.remove('active');
             mobileMenu.classList.remove('show');
-            document.body.classList.add('popup-background-blur');
         });
     }
 }
@@ -303,7 +294,6 @@ for (const [btnId, popupId] of Object.entries(closeButtons)) {
             }
             hamburgerIcon.classList.remove('active');
             mobileMenu.classList.remove('show');
-            document.body.classList.remove('popup-background-blur');
         });
     }
 }
@@ -327,7 +317,6 @@ document.addEventListener('click', (e) => {
         }
         hamburgerIcon.classList.remove('active');
         mobileMenu.classList.remove('show');
-        document.body.classList.remove('popup-background-blur');
     }
 });
 
@@ -347,7 +336,6 @@ plusInput.addEventListener("keydown", function (e) {
             document.getElementById("plusPopup").style.display = "none";
             hamburgerIcon.classList.remove('active');
             mobileMenu.classList.remove('show');
-            document.body.classList.remove('popup-background-blur');
             
             if (isGameOver) {
                 restartPopup.style.display = 'block';
@@ -378,7 +366,6 @@ document.getElementById("mobileFullscreenBtn").addEventListener("click", functio
     }
     document.querySelector('.mobile-menu').classList.remove('show');
     hamburgerIcon.classList.remove('active');
-    document.body.classList.remove('popup-background-blur');
 });
 
 const darkModeToggle = document.getElementById("darkModeToggle");
@@ -431,7 +418,7 @@ function preGenerateContent() {
 
 function generateRandomContent() {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
-    const words = ['I am 21', 'ipsum', 'dolor', 'Dollar bill', 'amet', 'consectetur', 'Broke', 'elit', 'sed', 'do', 'eiusmod', 'Peeru', 'incididunt', 'ut', 'Help!', 'et', 'dolore', 'magna', 'You can do it'];
+    const words = ['I am 21', 'ipsum', 'dolor', 'Dollar bill', 'amet', 'consectetur', 'Broke', 'elit', 'sed', 'do', 'eiusmod', 'Peeru', 'incididunt', 'ut', 'Help', 'et', 'You can do it', 'magna', 'aliqua'];
     const randomType = Math.random() < 0.5 ? 'character' : 'word';
 
     if (randomType === 'character') {
@@ -603,7 +590,6 @@ document.getElementById("placeButton").addEventListener("click", () => {
         document.getElementById("plusPopup").style.display = "none";
         hamburgerIcon.classList.remove('active');
         mobileMenu.classList.remove('show');
-        document.body.classList.remove('popup-background-blur');
         
         if (isGameOver) {
             restartPopup.style.display = 'block';
@@ -615,7 +601,7 @@ document.getElementById("placeButton").addEventListener("click", () => {
 
 function getRandomSpeed() {
     const min = 1;
-    const max = 25;
+    const max = 25; // Changed from 30 to 25
     const fractionalValues = [
         1, 1.3, 1.6, 1.9, 2.2, 2.5, 2.8, 3.1, 3.4, 3.7, 4.0, 4.3, 4.6, 4.9, 5.2, 5.5, 5.8, 6.1, 6.4, 6.7, 7.0, 7.3, 7.6, 7.9, 8.2, 8.5, 
         8.8, 9.1, 9.4, 9.7, 10.0, 10.3, 10.6, 10.9, 11.2, 11.5, 11.8, 12.1, 12.4, 12.7, 13.0, 13.3, 13.6, 13.9, 14.2, 14.5, 
@@ -630,14 +616,14 @@ function getRandomSpeed() {
             baseSpeed = 1 + (progress * 14);
         } else {
             const post50Progress = Math.min(1, (score - 50) / 50);
-            baseSpeed = 15 + (post50Progress * 10);
+            baseSpeed = 15 + (post50Progress * 10); 
         }
     } else { 
         if (score <= 50) {
             const progress = score / 50;
             baseSpeed = 1 + (progress * 24);
         } else {
-            baseSpeed = 25;
+            baseSpeed = 25; 
         }
     }
 
