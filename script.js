@@ -15,6 +15,44 @@ const closeButtons = {
 const restartPopup = document.getElementById('popup');
 const hamburgerIcon = document.getElementById('hamburgerIcon');
 const mobileMenu = document.querySelector('.mobile-menu');
+const cursor = document.getElementById('cursor');
+const container = document.querySelector('.container');
+const content = document.querySelector('.content');
+const arrowButton = document.getElementById('arrowButton');
+const playButton = document.getElementById('playButton');
+const restartButton = document.getElementById('restartButton');
+const scoreValue = document.getElementById('scoreValue');
+const bestScoreValue = document.getElementById('bestScoreValue');
+const finalScore = document.getElementById('finalScore');
+const lineHeight = 20;
+const containerHeight = container.clientHeight;
+const upperThreshold = containerHeight * 0.25;
+let topPosition = 0;
+let isGameStarted = false;
+let isGameOver = false;
+let isMovingDownward = true;
+let upwardMovementCount = 0;
+let gameTimeout = null;
+let score = 0;
+let linesMoved = 0;
+let bestScore = localStorage.getItem('bestScore') || 0;
+bestScoreValue.textContent = bestScore;
+document.getElementById('mobileBestScoreValue').textContent = bestScore;
+
+let userTexts = [];
+let placedTexts = new Set();
+let userPlacementCount = 0;
+const maxPlacementsPerVisit = 5;
+let occupiedLines = new Set();
+
+const dictionaryWords = [
+    'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I',
+    'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
+];
+
+const totalPages = 625;
+const totalLines = 5000;
+const linesPerPage = totalLines / totalPages;
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("helpPopup").style.display = "block";
@@ -34,36 +72,62 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('mobileScoreValue').textContent = score;
     document.getElementById('mobileBestScoreValue').textContent = bestScore;
     
+    // Initialize cursor settings
     const savedCursorSize = localStorage.getItem('cursorSize') || '2';
     const savedCursorColor = localStorage.getItem('cursorColor') || 'black';
     
-    document.getElementById('cursorSizeInput').value = savedCursorSize;
+    const cursorSizeInput = document.getElementById('cursorSizeInput');
+    cursorSizeInput.value = savedCursorSize;
     cursor.style.width = `${savedCursorSize}px`;
     cursor.style.backgroundColor = savedCursorColor;
     
+    // Set selected color
     document.querySelectorAll('.color-option').forEach(option => {
         if (option.dataset.color === savedCursorColor) {
             option.classList.add('selected');
         }
     });
-
-    document.getElementById('cursorSizeInput').addEventListener('input', function() {
-        let size = parseFloat(this.value);
-        if (isNaN(size)) {
-            size = 2;
+    
+    // Fixed cursor size input handling
+    cursorSizeInput.addEventListener('input', function() {
+        // Get the raw input value
+        const rawValue = this.value;
+        
+        // Only process if there's actually input
+        if (rawValue.length > 0) {
+            // Convert to number
+            let size = parseFloat(rawValue);
+            
+            // If not a number or empty, set to default 2
+            if (isNaN(size)) {
+                size = 2;
+            }
+            
+            // Clamp between 1 and 5
+            size = Math.max(1, Math.min(5, size));
+            
+            // Update the input field with the validated value
+            this.value = size;
+            
+            // Apply the size to the cursor
+            cursor.style.width = `${size}px`;
+            localStorage.setItem('cursorSize', size);
         }
-        if (size > 5) {
-            size = 5;
-            this.value = 5;
-        } else {
-            this.value = size; 
+    });
+    
+    // Handle blur to ensure we always have a valid value
+    cursorSizeInput.addEventListener('blur', function() {
+        if (this.value === '') {
+            this.value = 2;
+            cursor.style.width = '2px';
+            localStorage.setItem('cursorSize', '2');
         }
-        cursor.style.width = `${size}px`;
-        localStorage.setItem('cursorSize', size);
     });
     
     preGenerateContent();
 });
+
+// [Rest of the event listeners and functions remain exactly the same...]
 
 for (const [btnId, popupId] of Object.entries(popups)) {
     const btn = document.getElementById(btnId);
@@ -188,7 +252,7 @@ soundToggle.addEventListener("change", function () {
         cursorSound.volume = 0;
         gameEndSound.volume = 0;
     } else {
-        cursorSound.volume = 0.7;
+        cursorSound.volume = 0.5;
         gameEndSound.volume = 1;
     }
 });
@@ -211,144 +275,6 @@ colorOptions.forEach(option => {
         this.classList.add('selected');
     });
 });
-
-const cursor = document.getElementById('cursor');
-const container = document.querySelector('.container');
-const content = document.querySelector('.content');
-const arrowButton = document.getElementById('arrowButton');
-const playButton = document.getElementById('playButton');
-const restartButton = document.getElementById('restartButton');
-const scoreValue = document.getElementById('scoreValue');
-const bestScoreValue = document.getElementById('bestScoreValue');
-const finalScore = document.getElementById('finalScore');
-const lineHeight = 20;
-const containerHeight = container.clientHeight;
-const upperThreshold = containerHeight * 0.25;
-let topPosition = 0;
-let isGameStarted = false;
-let isGameOver = false;
-let isMovingDownward = true;
-let upwardMovementCount = 0;
-let gameTimeout = null;
-let score = 0;
-let linesMoved = 0;
-let bestScore = localStorage.getItem('bestScore') || 0;
-bestScoreValue.textContent = bestScore;
-document.getElementById('mobileBestScoreValue').textContent = bestScore;
-
-let userTexts = [];
-let placedTexts = new Set();
-let userPlacementCount = 0;
-const maxPlacementsPerVisit = 5;
-let occupiedLines = new Set();
-
-const dictionaryWords = [
-    'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I',
-    'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
-    'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
-    'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what',
-    'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me',
-    'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take',
-    'people', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other',
-    'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also',
-    'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way',
-    'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us',
-    'is', 'are', 'was', 'were', 'been', 'has', 'had', 'do', 'does', 'did',
-    'shall', 'will', 'should', 'would', 'may', 'might', 'must', 'can', 'could', 'ought',
-    'about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'at', 'before',
-    'behind', 'below', 'beneath', 'beside', 'between', 'beyond', 'but', 'by', 'concerning', 'considering',
-    'despite', 'down', 'during', 'except', 'for', 'from', 'in', 'inside', 'into', 'like',
-    'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 'over', 'past', 'regarding',
-    'round', 'since', 'through', 'throughout', 'to', 'toward', 'under', 'underneath', 'until', 'unto',
-    'up', 'upon', 'with', 'within', 'without', 'according', 'ahead', 'alongside', 'apart', 'aside',
-    'astride', 'atop', 'bar', 'barring', 'because', 'beforehand', 'behindhand', 'belowstairs', 'beneath', 'besides',
-    'between', 'betwixt', 'beyond', 'but', 'by', 'circa', 'concerning', 'considering', 'despite', 'down',
-    'during', 'except', 'excluding', 'failing', 'following', 'for', 'from', 'given', 'in', 'including',
-    'inside', 'into', 'like', 'minus', 'near', 'notwithstanding', 'of', 'off', 'on', 'onto',
-    'opposite', 'out', 'outside', 'over', 'past', 'per', 'plus', 'regarding', 'round', 'save',
-    'since', 'than', 'through', 'throughout', 'till', 'times', 'to', 'toward', 'under', 'underneath',
-    'unlike', 'until', 'up', 'upon', 'versus', 'via', 'with', 'within', 'without', 'worth',
-    'a', 'an', 'the', 'some', 'any', 'no', 'every', 'each', 'either', 'neither',
-    'my', 'your', 'his', 'her', 'its', 'our', 'their', 'this', 'that', 'these',
-    'those', 'such', 'what', 'which', 'whose', 'another', 'other', 'one', 'two', 'three',
-    'first', 'second', 'third', 'last', 'next', 'many', 'few', 'several', 'much', 'little',
-    'more', 'most', 'less', 'least', 'enough', 'all', 'both', 'half', 'such', 'same',
-    'different', 'own', 'same', 'so', 'as', 'than', 'too', 'very', 'quite', 'rather',
-    'somewhat', 'enough', 'indeed', 'still', 'almost', 'enough', 'even', 'just', 'only', 'really',
-    'almost', 'enough', 'even', 'just', 'only', 'really', 'almost', 'enough', 'even', 'just',
-    'only', 'really', 'almost', 'enough', 'even', 'just', 'only', 'really', 'almost', 'enough',
-    'even', 'just', 'only', 'really', 'almost', 'enough', 'even', 'just', 'only', 'really',
-    'I', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'him', 'her',
-    'us', 'them', 'myself', 'yourself', 'himself', 'herself', 'itself', 'ourselves', 'yourselves', 'themselves',
-    'who', 'whom', 'whose', 'which', 'what', 'that', 'these', 'those', 'anybody', 'anyone',
-    'anything', 'each', 'either', 'everybody', 'everyone', 'everything', 'neither', 'nobody', 'none', 'nothing',
-    'one', 'other', 'somebody', 'someone', 'something', 'both', 'few', 'many', 'several', 'all',
-    'any', 'more', 'most', 'some', 'such', 'no', 'own', 'same', 'so', 'than',
-    'too', 'very', 'will', 'would', 'shall', 'should', 'can', 'could', 'may', 'might',
-    'must', 'ought', 'need', 'dare', 'used', 'do', 'does', 'did', 'doing', 'done',
-    'have', 'has', 'had', 'having', 'be', 'am', 'is', 'are', 'was', 'were',
-    'being', 'been', 'get', 'gets', 'got', 'gotten', 'getting', 'seem', 'seems', 'seemed',
-    'seeming', 'become', 'becomes', 'became', 'becoming', 'remain', 'remains', 'remained', 'remaining', 'appear',
-    'appears', 'appeared', 'appearing', 'feel', 'feels', 'felt', 'feeling', 'look', 'looks', 'looked',
-    'looking', 'sound', 'sounds', 'sounded', 'sounding', 'taste', 'tastes', 'tasted', 'tasting', 'smell',
-    'smells', 'smelled', 'smelling', 'grow', 'grows', 'grew', 'grown', 'growing', 'prove', 'proves',
-    'proved', 'proven', 'proving', 'stay', 'stays', 'stayed', 'staying', 'turn', 'turns', 'turned',
-    'turning', 'go', 'goes', 'went', 'gone', 'going', 'come', 'comes', 'came', 'coming',
-    'run', 'runs', 'ran', 'run', 'running', 'fall', 'falls', 'fell', 'fallen', 'falling',
-    'stand', 'stands', 'stood', 'standing', 'sit', 'sits', 'sat', 'sitting', 'lie', 'lies',
-    'lay', 'lain', 'lying', 'arise', 'arises', 'arose', 'arisen', 'arising', 'awake', 'awakes',
-    'awoke', 'awoken', 'awaking', 'bear', 'bears', 'bore', 'born', 'bearing', 'beat', 'beats',
-    'beat', 'beaten', 'beating', 'become', 'becomes', 'became', 'become', 'becoming', 'begin', 'begins',
-    'began', 'begun', 'beginning', 'bend', 'bends', 'bent', 'bending', 'bet', 'bets', 'bet',
-    'betting', 'bid', 'bids', 'bid', 'bidding', 'bind', 'binds', 'bound', 'binding', 'bite',
-    'bites', 'bit', 'bitten', 'biting', 'bleed', 'bleeds', 'bled', 'bleeding', 'blow', 'blows',
-    'blew', 'blown', 'blowing', 'break', 'breaks', 'broke', 'broken', 'breaking', 'bring', 'brings',
-    'brought', 'bringing', 'build', 'builds', 'built', 'building', 'burn', 'burns', 'burned', 'burning',
-    'burst', 'bursts', 'burst', 'bursting', 'buy', 'buys', 'bought', 'buying', 'catch', 'catches',
-    'caught', 'catching', 'choose', 'chooses', 'chose', 'chosen', 'choosing', 'come', 'comes', 'came',
-    'coming', 'cost', 'costs', 'cost', 'costing', 'cut', 'cuts', 'cut', 'cutting', 'dig',
-    'digs', 'dug', 'digging', 'do', 'does', 'did', 'done', 'doing', 'draw', 'draws',
-    'drew', 'drawn', 'drawing', 'dream', 'dreams', 'dreamed', 'dreaming', 'drive', 'drives', 'drove',
-    'driven', 'driving', 'drink', 'drinks', 'drank', 'drunk', 'drinking', 'eat', 'eats', 'ate',
-    'eaten', 'eating', 'fall', 'falls', 'fell', 'fallen', 'falling', 'feed', 'feeds', 'fed',
-    'feeding', 'feel', 'feels', 'felt', 'feeling', 'fight', 'fights', 'fought', 'fighting', 'find',
-    'finds', 'found', 'finding', 'fly', 'flies', 'flew', 'flown', 'flying', 'forget', 'forgets',
-    'forgot', 'forgotten', 'forgetting', 'forgive', 'forgives', 'forgave', 'forgiven', 'forgiving', 'freeze', 'freezes',
-    'froze', 'frozen', 'freezing', 'get', 'gets', 'got', 'gotten', 'getting', 'give', 'gives',
-    'gave', 'given', 'giving', 'go', 'goes', 'went', 'gone', 'going', 'grow', 'grows',
-    'grew', 'grown', 'growing', 'hang', 'hangs', 'hung', 'hanging', 'have', 'has', 'had',
-    'having', 'hear', 'hears', 'heard', 'hearing', 'hide', 'hides', 'hid', 'hidden', 'hiding',
-    'hit', 'hits', 'hit', 'hitting', 'hold', 'holds', 'held', 'holding', 'hurt', 'hurts',
-    'hurt', 'hurting', 'keep', 'keeps', 'kept', 'keeping', 'know', 'knows', 'knew', 'known',
-    'knowing', 'lay', 'lays', 'laid', 'laying', 'lead', 'leads', 'led', 'leading', 'learn',
-    'learns', 'learned', 'learning', 'leave', 'leaves', 'left', 'leaving', 'lend', 'lends', 'lent',
-    'lending', 'let', 'lets', 'let', 'letting', 'lie', 'lies', 'lay', 'lain', 'lying',
-    'light', 'lights', 'lit', 'lighting', 'lose', 'loses', 'lost', 'losing', 'make', 'makes',
-    'made', 'making', 'mean', 'means', 'meant', 'meaning', 'meet', 'meets', 'met', 'meeting',
-    'pay', 'pays', 'paid', 'paying', 'put', 'puts', 'put', 'putting', 'read', 'reads',
-    'read', 'reading', 'ride', 'rides', 'rode', 'ridden', 'riding', 'ring', 'rings', 'rang',
-    'rung', 'ringing', 'rise', 'rises', 'rose', 'risen', 'rising', 'run', 'runs', 'ran',
-    'run', 'running', 'say', 'says', 'said', 'saying', 'see', 'sees', 'saw', 'seen',
-    'seeing', 'sell', 'sells', 'sold', 'selling', 'send', 'sends', 'sent', 'sending', 'set',
-    'sets', 'set', 'setting', 'shake', 'shakes', 'shook', 'shaken', 'shaking', 'shine', 'shines',
-    'shone', 'shining', 'shoot', 'shoots', 'shot', 'shooting', 'show', 'shows', 'showed', 'shown',
-    'showing', 'shut', 'shuts', 'shut', 'shutting', 'sing', 'sings', 'sang', 'sung', 'singing',
-    'sink', 'sinks', 'sank', 'sunk', 'sinking', 'sit', 'sits', 'sat', 'sitting', 'sleep',
-    'sleeps', 'slept', 'sleeping', 'speak', 'speaks', 'spoke', 'spoken', 'speaking', 'spend', 'spends',
-    'spent', 'spending', 'stand', 'stands', 'stood', 'standing', 'steal', 'steals', 'stole', 'stolen',
-    'stealing', 'stick', 'sticks', 'stuck', 'sticking', 'strike', 'strikes', 'struck', 'struck', 'striking',
-    'swear', 'swears', 'swore', 'sworn', 'swearing', 'sweep', 'sweeps', 'swept', 'sweeping', 'swim',
-    'swims', 'swam', 'swum', 'swimming', 'take', 'takes', 'took', 'taken', 'taking', 'teach',
-    'teaches', 'taught', 'teaching', 'tear', 'tears', 'tore', 'torn', 'tearing', 'tell', 'tells',
-    'told', 'telling', 'think', 'thinks', 'thought', 'thinking', 'throw', 'throws', 'threw', 'thrown',
-    'throwing', 'understand', 'understands', 'understood', 'understanding', 'wake', 'wakes', 'woke', 'woken', 'waking',
-    'wear', 'wears', 'wore', 'worn', 'wearing', 'win', 'wins', 'won', 'winning', 'write',
-    'writes', 'wrote', 'written', 'writing'
-];
-
-const totalPages = 625;
-const totalLines = 5000;
-const linesPerPage = totalLines / totalPages;
 
 function preGenerateContent() {
     placeRandomContent();
@@ -621,7 +547,7 @@ function changeCursorColor() {
 
 function triggerGameEndVibration() {
     if ("vibrate" in navigator) {
-        navigator.vibrate([300, 50, 300]);
+        navigator.vibrate([500, 100, 500]);
     }
 }
 
@@ -740,7 +666,6 @@ function resetGame() {
     cursor.style.left = '0px';
     cursor.classList.remove('no-blink');
     
-    // Restore saved cursor settings
     const savedCursorSize = localStorage.getItem('cursorSize') || '2';
     const savedCursorColor = localStorage.getItem('cursorColor') || 'black';
     cursor.style.width = `${savedCursorSize}px`;
