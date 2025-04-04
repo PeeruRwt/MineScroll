@@ -55,9 +55,10 @@ body.dark-mode {
         justify-content: space-between;
         align-items: center;
         padding: 0 10px;
-        height: 60px;
+        height: 50px;
         left: 0;
         right: 0;
+        top: 5px;
     }
 
     .left-group,
@@ -69,6 +70,8 @@ body.dark-mode {
         display: flex;
         position: relative;
         z-index: 1000;
+        flex: 1;
+        justify-content: flex-start;
     }
 
     .hamburger-icon {
@@ -131,16 +134,20 @@ body.dark-mode {
 
     .center-scores {
         display: flex !important;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
+        position: static;
+        transform: none;
         gap: 15px;
         white-space: nowrap;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
     }
 
     .text-btn {
         margin: 0;
         min-width: max-content;
+        padding: 0 8px;
+        height: 30px;
     }
 
     .dark-mode .mobile-menu {
@@ -150,7 +157,7 @@ body.dark-mode {
 
 @media (max-width: 370px) {
     .center-scores {
-        gap: 5px;
+        gap: 8px;
     }
 }
 
@@ -243,25 +250,68 @@ body.dark-mode {
     .container-wrapper {
         flex-direction: column;
         margin-left: 0;
-        padding-bottom: 80px;
-        height: calc(100vh - 130px);
+        padding-bottom: 30px;
+        height: calc(100vh - 80px);
+        margin-top: 50px;
     }
 
-    .arrow-button {
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        margin-left: 0;
-        margin-top: 20px;
-        width: 60px;
-        height: 60px;
-    }
+.arrow-button {
+    width: 60px;
+    height: 60px;
+    background-color: #F4B400; 
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+    cursor: pointer;
+    position: relative; 
+    box-shadow: 0 4px 0 #DB8B00, 
+                0 6px 8px rgba(0,0,0,0.2); 
+    transition: all 0.1s ease;
+}
 
-    .arrow-button::after {
-        font-size: 45px;
-        margin-top: -3px;
-    }
+.arrow-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.1);
+    border-radius: 50%;
+    transform: translateZ(-3px);
+    filter: blur(1px);
+}
+
+.arrow-button::after {
+    content: '↓';
+    font-size: 45px;
+    color: white;
+    line-height: 1;
+    margin-top: -3px;
+    position: relative;
+    z-index: 2;
+    transform: translateZ(10px);
+}
+
+.arrow-button:hover {
+    transform: scale(1.0);
+}
+
+.arrow-button:active {
+    transform: translateY(3px) scale(0.95);
+    box-shadow: 0 1px 0 #DB8B00,
+                0 3px 5px rgba(0,0,0,0.2);
+}
+
+.dark-mode .arrow-button {
+    background-color: #F4B400; 
+}
+
+.dark-mode .arrow-button::after {
+    color: #ffffff;
+}
 }
 
 .container {
@@ -299,7 +349,7 @@ body.dark-mode {
 }
 
 .dark-mode .container {
-    background-color: #2d2d2d;
+    background-color: #555555;
     border-color: #1A73E8;
 }
 
@@ -337,13 +387,13 @@ body.dark-mode {
         to bottom,
         transparent,
         transparent 19px,
-        #666 19px,
-        #666 20px
+        #5a5a5a 19px,  
+        #5a5a5a 20px
     );
     background-image:
-        radial-gradient(circle at 10% 10%, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-        radial-gradient(circle at 90% 90%, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+        radial-gradient(circle at 10% 10%, rgba(0, 0, 0, 0.3) 1px, transparent 1px), 
+        radial-gradient(circle at 90% 90%, rgba(0, 0, 0, 0.3) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 1px, transparent 1px); 
     background-size: 100% 100%, 100% 100%, 100% 20px;
 }
 
@@ -365,7 +415,8 @@ body.dark-mode {
 }
 
 .dark-mode .cursor {
-    background-color: white;
+    background-color: #ffffff; 
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.7); 
 }
 
 @keyframes blink {
@@ -389,32 +440,61 @@ body.dark-mode {
 }
 
 .arrow-button {
-    width: 40px;
-    height: 40px;
-    background-color: black;
+    width: 50px;
+    height: 50px;
+    background-color: #F4B400; 
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-left: 5px;
     cursor: pointer;
-    padding: 0;
+    position: relative;
+    box-shadow: 0 4px 0 #DB8B00, 
+                0 6px 8px rgba(0,0,0,0.2); 
+    transition: all 0.1s ease;
+}
+
+.arrow-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.1);
+    border-radius: 50%;
+    transform: translateZ(-3px);
+    filter: blur(1px);
 }
 
 .arrow-button::after {
     content: '↓';
-    font-size: 30px;
+    font-size: 40px;
     color: white;
     line-height: 1;
-    margin-top: -2px;
+    margin-top: -2.5px;
+    position: relative;
+    z-index: 2;
+    transform: translateZ(10px);
+}
+
+.arrow-button:hover {
+    transform: scale(1.0);
+}
+
+.arrow-button:active {
+    transform: translateY(3px) scale(0.95);
+    box-shadow: 0 1px 0 #DB8B00,
+                0 3px 5px rgba(0,0,0,0.2);
 }
 
 .dark-mode .arrow-button {
-    background-color: #D4D4D4;
+    background-color: #F4B400;
 }
 
 .dark-mode .arrow-button::after {
-    color: black;
+    color: #ffffff; 
 }
 
 .popup {
@@ -441,6 +521,57 @@ body.dark-mode {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
+#restartButton {
+    position: relative;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(145deg, #2e8b57, #3cb371);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #2a7a4d,
+                0 8px 10px rgba(0,0,0,0.3);
+    transition: all 0.1s ease;
+    perspective: 500px;
+    transform-style: preserve-3d;
+    margin-top: 15px; 
+}
+
+#restartButton .button-text {
+    position: relative;
+    z-index: 2;
+    display: block;
+    transform: translateZ(20px);
+}
+
+#restartButton .button-shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.1);
+    border-radius: 10px;
+    transform: translateZ(-5px);
+    filter: blur(2px);
+}
+
+#restartButton:hover {
+    transform: scale(1.05);
+}
+
+#restartButton:active {
+    transform: translateY(5px) scale(0.98);
+    box-shadow: 0 2px 0 #2a7a4d,
+                0 3px 5px rgba(0,0,0,0.3);
+    background: linear-gradient(145deg, #3cb371, #2e8b57);
+}
+
+#restartButton:active .button-text {
+    transform: translateZ(15px);
+}
 .play-button {
     position: absolute;
     top: 50%;
@@ -450,12 +581,12 @@ body.dark-mode {
     font-size: 18px;
     font-weight: bold;
     color: white;
-    background: linear-gradient(145deg, #2e8b57, #3cb371);
+    background: linear-gradient(145deg, #1976D2, #2196F3); 
     border: none;
     border-radius: 10px;
     cursor: pointer;
     z-index: 10;
-    box-shadow: 0 6px 0 #2a7a4d,
+    box-shadow: 0 6px 0 #0D47A1, 
                 0 8px 10px rgba(0,0,0,0.3);
     transition: all 0.1s ease;
     perspective: 500px;
@@ -463,10 +594,9 @@ body.dark-mode {
 }
 
 .play-button:active {
-    transform: translate(-50%, -45%);
-    box-shadow: 0 2px 0 #2a7a4d,
+    background: linear-gradient(145deg, #2196F3, #1976D2); 
+    box-shadow: 0 2px 0 #0D47A1, 
                 0 3px 5px rgba(0,0,0,0.3);
-    background: linear-gradient(145deg, #3cb371, #2e8b57);
 }
 
 .button-text {
@@ -497,8 +627,12 @@ body.dark-mode {
 }
 
 #popup {
+    position: fixed;
+    top: 50%;
+    left: 49.6%;
+    transform: translate(-50%, -50%);
     width: 363px;
-    text-align: center;
+
 }
 
 #popup p {
