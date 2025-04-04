@@ -1,10 +1,3 @@
-@font-face {
-    font-family: 'Kodchasan';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url(https://fonts.gstatic.com/s/kodchasan/v7/1cX0aUPOAJv9sG4I-DJeI1OQ.woff2) format('woff2');
-}
 
 * {
     font-family: 'Kodchasan', sans-serif;
@@ -254,6 +247,7 @@ body.dark-mode {
         height: calc(100vh - 80px);
         margin-top: 50px;
     }
+}
 
 .arrow-button {
     width: 60px;
@@ -311,7 +305,6 @@ body.dark-mode {
 
 .dark-mode .arrow-button::after {
     color: #ffffff;
-}
 }
 
 .container {
@@ -511,7 +504,7 @@ body.dark-mode {
     border-radius: 6px;
     z-index: 1002;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s, color 0 3s;
 }
 
 .dark-mode .popup {
@@ -519,6 +512,18 @@ body.dark-mode {
     color: #E0E0E0;
     border-color: #1A73E8;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.popup-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(2px) grayscale(20%);
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    display: none;
 }
 
 #restartButton {
@@ -572,6 +577,7 @@ body.dark-mode {
 #restartButton:active .button-text {
     transform: translateZ(15px);
 }
+
 .play-button {
     position: absolute;
     top: 50%;
@@ -632,16 +638,21 @@ body.dark-mode {
     left: 49.6%;
     transform: translate(-50%, -50%);
     width: 363px;
-
 }
 
 #popup p {
     margin: 10px 0;
 }
 
+#popup p:first-child {
+    font-size: 28px; 
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
 #scoreMessage {
-    font-size: 14px;
-    color: #555;
+    font-size: 16px;
+    line-height: 1.5;
 }
 
 .dark-mode #scoreMessage {

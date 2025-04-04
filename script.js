@@ -387,8 +387,8 @@ soundToggle.addEventListener("change", function () {
         cursorSound.volume = 0;
         gameEndSound.volume = 0;
     } else {
-        cursorSound.volume = 0.7;
-        gameEndSound.volume = 1;
+        cursorSound.volume = 1;
+        gameEndSound.volume = 1.5;
     }
 });
 
@@ -600,30 +600,32 @@ document.getElementById("placeButton").addEventListener("click", () => {
 });
 
 function getRandomSpeed() {
-    const min = 1;
-    const max = 25; // Changed from 30 to 25
     const fractionalValues = [
         1, 1.3, 1.6, 1.9, 2.2, 2.5, 2.8, 3.1, 3.4, 3.7, 4.0, 4.3, 4.6, 4.9, 5.2, 5.5, 5.8, 6.1, 6.4, 6.7, 7.0, 7.3, 7.6, 7.9, 8.2, 8.5, 
         8.8, 9.1, 9.4, 9.7, 10.0, 10.3, 10.6, 10.9, 11.2, 11.5, 11.8, 12.1, 12.4, 12.7, 13.0, 13.3, 13.6, 13.9, 14.2, 14.5, 
-        14.8, 15.1, 15.4, 15.7, 16.0, 16.3, 16.6, 16.9, 17.2, 17.5, 17.8, 18.1, 18.4, 18.7, 19.0, 19.3, 19.6, 19.9, 20.2, 
-        20.5, 20.8, 21.1, 21.4, 21.7, 22.0, 22.3, 22.6, 22.9, 23.2, 23.5, 23.8, 24.1, 24.4, 24.7, 25.0
+        14.8, 15.1, 15.4, 15.7, 16.0, 16.3, 16.6, 16.9, 17.2, 17.5, 17.8, 18.1, 18.4, 18.7, 19.0, 19.3, 19.6, 19.9, 20.0
     ];
     
     let baseSpeed;
     if (!isHardMode) {
         if (score <= 50) {
             const progress = score / 50;
-            baseSpeed = 1 + (progress * 14);
+            baseSpeed = 1 + (progress * 14); 
         } else {
             const post50Progress = Math.min(1, (score - 50) / 50);
-            baseSpeed = 15 + (post50Progress * 10); 
+            baseSpeed = 15 + (post50Progress * 5); 
         }
-    } else { 
+    } else {
         if (score <= 50) {
             const progress = score / 50;
-            baseSpeed = 1 + (progress * 24);
+            baseSpeed = 1 + (progress * 19); 
         } else {
-            baseSpeed = 25; 
+
+            if (Math.random() < 0.005) {
+                baseSpeed = 20 + (Math.random() * 5);
+            } else {
+                baseSpeed = 20; 
+            }
         }
     }
 
