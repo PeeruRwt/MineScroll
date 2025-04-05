@@ -1,4 +1,3 @@
-
 * {
     font-family: 'Kodchasan', sans-serif;
     user-select: none;
@@ -129,18 +128,44 @@ body.dark-mode {
         display: flex !important;
         position: static;
         transform: none;
-        gap: 15px;
+        gap: 18px;
         white-space: nowrap;
         flex: 1;
-        justify-content: center;
+        justify-content: flex-end;
         align-items: center;
+        padding-right: 5px; 
     }
 
-    .text-btn {
-        margin: 0;
-        min-width: max-content;
-        padding: 0 8px;
-        height: 30px;
+    .mobile-score-container,
+    .mobile-best-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-width: 60px;
+        border-radius: 5px; 
+    }
+
+    .mobile-score-label,
+    .mobile-best-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 2px;
+    }
+
+    .mobile-score-value,
+    .mobile-best-value {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
+    .dark-mode .mobile-score-label,
+    .dark-mode .mobile-best-label,
+    .dark-mode .mobile-score-value,
+    .dark-mode .mobile-best-value {
+        color: #E0E0E0;
     }
 
     .dark-mode .mobile-menu {
@@ -150,7 +175,8 @@ body.dark-mode {
 
 @media (max-width: 370px) {
     .center-scores {
-        gap: 8px;
+        gap: 10px;
+        padding-right: 10px;
     }
 }
 
@@ -211,21 +237,21 @@ body.dark-mode {
     background-color: rgb(15, 157, 88) !important;
 }
 
-#scoreBtn, .right-group .text-btn, .mobile-score-btn, .mobile-best-btn {
+#scoreBtn, .right-group .text-btn, .mobile-score-container, .mobile-best-container {
     background-color: #D2B48C;
     cursor: pointer;
 }
 
-#scoreBtn:hover, .right-group .text-btn:hover, .mobile-score-btn:hover, .mobile-best-btn:hover {
+#scoreBtn:hover, .right-group .text-btn:hover, .mobile-score-container:hover, .mobile-best-container:hover {
     background-color: #F5F5DC;
 }
 
-.dark-mode #scoreBtn, .dark-mode .right-group .text-btn, .dark-mode .mobile-score-btn, .dark-mode .mobile-best-btn {
+.dark-mode #scoreBtn, .dark-mode .right-group .text-btn, .dark-mode .mobile-score-container, .dark-mode .mobile-best-container {
     background-color: #1A73E8;
     color: #E0E0E0;
 }
 
-.dark-mode #scoreBtn:hover, .dark-mode .right-group .text-btn:hover, .dark-mode .mobile-score-btn:hover, .dark-mode .mobile-best-btn:hover {
+.dark-mode #scoreBtn:hover, .dark-mode .right-group .text-btn:hover, .dark-mode .mobile-score-container:hover, .dark-mode .mobile-best-container:hover {
     background-color: #1557B2;
 }
 
@@ -244,8 +270,8 @@ body.dark-mode {
         flex-direction: column;
         margin-left: 0;
         padding-bottom: 30px;
-        height: calc(100vh - 80px);
-        margin-top: 50px;
+        height: calc(100vh - 60px);
+        margin-top: 40px;
     }
 }
 
@@ -258,6 +284,7 @@ body.dark-mode {
     justify-content: center;
     align-items: center;
     margin-left: 5px;
+    margin-top: 5px;
     cursor: pointer;
     position: relative; 
     box-shadow: 0 4px 0 #DB8B00, 
@@ -645,13 +672,13 @@ body.dark-mode {
 }
 
 #popup p:first-child {
-    font-size: 28px; 
-    font-weight: 600;
+    font-size: 18px; 
+    font-weight: 500;
     margin-bottom: 5px;
 }
 
 #scoreMessage {
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.5;
 }
 

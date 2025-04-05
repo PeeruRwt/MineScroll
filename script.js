@@ -24,6 +24,8 @@ const restartButton = document.getElementById('restartButton');
 const scoreValue = document.getElementById('scoreValue');
 const bestScoreValue = document.getElementById('bestScoreValue');
 const finalScore = document.getElementById('finalScore');
+const mobileScoreValue = document.getElementById('mobileScoreValue');
+const mobileBestScoreValue = document.getElementById('mobileBestScoreValue');
 const lineHeight = 20;
 const containerHeight = container.clientHeight;
 const upperThreshold = containerHeight * 0.25;
@@ -37,7 +39,7 @@ let score = 0;
 let linesMoved = 0;
 let bestScore = localStorage.getItem('bestScore') || 0;
 bestScoreValue.textContent = bestScore;
-document.getElementById('mobileBestScoreValue').textContent = bestScore;
+mobileBestScoreValue.textContent = bestScore;
 
 let userTexts = [];
 let placedTexts = new Set();
@@ -186,8 +188,8 @@ document.addEventListener("DOMContentLoaded", () => {
         mobileMenu.classList.remove('show');
     });
 
-    document.getElementById('mobileScoreValue').textContent = score;
-    document.getElementById('mobileBestScoreValue').textContent = bestScore;
+    mobileScoreValue.textContent = score;
+    mobileBestScoreValue.textContent = bestScore;
     
     const savedCursorSize = localStorage.getItem('cursorSize') || '2';
     const savedCursorColor = localStorage.getItem('cursorColor');
@@ -443,33 +445,40 @@ function placeDictionaryWords() {
     wordsContainer.innerHTML = '';
 
     const dictionaryDensity = isHardMode ? 0.15 : 0.10;
+    const batchSize = 500;
+    let currentLine = 0;
+    
+    function processBatch() {
+        const endLine = Math.min(currentLine + batchSize, totalLines);
+        
+        for (; currentLine < endLine; currentLine++) {
+            if (Math.random() < dictionaryDensity) {
+                const word = dictionaryWords[Math.floor(Math.random() * dictionaryWords.length)];
+                const wordElement = document.createElement("div");
+                wordElement.className = "dictionary-word";
+                
+                const randomValue = Math.random();
+                if (randomValue < 0.05) {
+                    wordElement.classList.add('dark-grey');
+                } else if (randomValue < 0.1) {
+                    const colorClasses = ['blue-color', 'red-color', 'yellow-color', 'green-color'];
+                    const randomColor = colorClasses[Math.floor(Math.random() * colorClasses.length)];
+                    wordElement.classList.add(randomColor);
+                }
 
-    for (let i = 0; i < totalLines; i++) {
-        if (Math.random() < dictionaryDensity) {
-            const word = dictionaryWords[Math.floor(Math.random() * dictionaryWords.length)];
-            const wordElement = document.createElement("div");
-            wordElement.className = "dictionary-word";
-            
-            const randomValue = Math.random();
-            if (randomValue < 0.05) {
-                wordElement.classList.add('dark-grey');
-            } else if (randomValue < 0.1) {
-                const colorClasses = ['blue-color', 'red-color', 'yellow-color', 'green-color'];
-                const randomColor = colorClasses[Math.floor(Math.random() * colorClasses.length)];
-                wordElement.classList.add(randomColor);
+                wordElement.textContent = word;
+                wordElement.style.left = `${Math.floor(Math.random() * (containerWidth - 50))}px`;
+                wordElement.style.top = `${currentLine * lineHeight}px`;
+                wordsContainer.appendChild(wordElement);
             }
-
-            wordElement.textContent = word;
-
-            const randomLeft = Math.floor(Math.random() * (containerWidth - 50));
-            const randomTop = i * lineHeight;
-
-            wordElement.style.left = `${randomLeft}px`;
-            wordElement.style.top = `${randomTop}px`;
-
-            wordsContainer.appendChild(wordElement);
+        }
+        
+        if (currentLine < totalLines) {
+            requestAnimationFrame(processBatch);
         }
     }
+    
+    processBatch();
 }
 
 function placeRandomContent() {
@@ -486,33 +495,39 @@ function placeRandomContent() {
     userTextElements.forEach(el => contentContainer.appendChild(el));
 
     const randomDensity = isHardMode ? 0.15 : 0.12;
+    const batchSize = 500;
+    let currentLine = 24;
+    
+    function processBatch() {
+        const endLine = Math.min(currentLine + batchSize, totalLines);
+        
+        for (; currentLine < endLine; currentLine++) {
+            if (Math.random() < randomDensity) {
+                const randomContent = generateRandomContent();
+                const textElement = document.createElement("div");
+                textElement.className = "user-text";
+                
+                const randomValue = Math.random();
+                if (randomValue < 0.05) {
+                    textElement.classList.add('dark-grey');
+                } else if (randomValue < 0.1) {
+                    const randomColor = colorClasses[Math.floor(Math.random() * colorClasses.length)];
+                    textElement.classList.add(randomColor);
+                }
 
-    for (let i = 24; i < totalLines; i++) {
-        if (Math.random() < randomDensity) {
-            const randomContent = generateRandomContent();
-
-            const textElement = document.createElement("div");
-            textElement.className = "user-text";
-            
-            const randomValue = Math.random();
-            if (randomValue < 0.05) {
-                textElement.classList.add('dark-grey');
-            } else if (randomValue < 0.1) {
-                const randomColor = colorClasses[Math.floor(Math.random() * colorClasses.length)];
-                textElement.classList.add(randomColor);
+                textElement.textContent = randomContent.content;
+                textElement.style.left = `${Math.floor(Math.random() * (container.clientWidth - 50))}px`;
+                textElement.style.top = `${currentLine * lineHeight}px`;
+                contentContainer.appendChild(textElement);
             }
-
-            textElement.textContent = randomContent.content;
-
-            const randomLeft = Math.floor(Math.random() * (container.clientWidth - 50));
-            const randomTop = i * lineHeight;
-
-            textElement.style.left = `${randomLeft}px`;
-            textElement.style.top = `${randomTop}px`;
-
-            contentContainer.appendChild(textElement);
+        }
+        
+        if (currentLine < totalLines) {
+            requestAnimationFrame(processBatch);
         }
     }
+    
+    processBatch();
 }
 
 function placeUserText(text) {
@@ -620,7 +635,6 @@ function getRandomSpeed() {
             const progress = score / 50;
             baseSpeed = 1 + (progress * 19); 
         } else {
-
             if (Math.random() < 0.005) {
                 baseSpeed = 20 + (Math.random() * 5);
             } else {
@@ -650,7 +664,7 @@ function updateScore() {
         if (linesMoved % 8 === 0) {
             score++;
             scoreValue.textContent = score;
-            document.getElementById('mobileScoreValue').textContent = score;
+            mobileScoreValue.textContent = score;
             
             scoreValue.classList.add('score-pop');
             setTimeout(() => {
@@ -660,7 +674,7 @@ function updateScore() {
             if (score > bestScore) {
                 bestScore = score;
                 bestScoreValue.textContent = bestScore;
-                document.getElementById('mobileBestScoreValue').textContent = bestScore;
+                mobileBestScoreValue.textContent = bestScore;
                 localStorage.setItem('bestScore', bestScore);
             }
         }
@@ -797,6 +811,7 @@ function resetGame() {
     if (gameTimeout) {
         clearTimeout(gameTimeout);
     }
+    
     topPosition = 0;
     cursor.style.display = 'none';
     cursor.style.top = '0px';
@@ -806,12 +821,8 @@ function resetGame() {
     const savedCursorSize = localStorage.getItem('cursorSize') || '2';
     const savedCursorColor = localStorage.getItem('cursorColor');
     cursor.style.width = `${savedCursorSize}px`;
-    
-    if (!savedCursorColor) {
-        cursor.style.backgroundColor = document.body.classList.contains('dark-mode') ? 'white' : 'black';
-    } else {
-        cursor.style.backgroundColor = savedCursorColor;
-    }
+    cursor.style.backgroundColor = savedCursorColor || 
+        (document.body.classList.contains('dark-mode') ? 'white' : 'black');
     
     container.classList.remove('out-of-bounds');
     restartPopup.style.display = 'none';
@@ -825,14 +836,16 @@ function resetGame() {
     container.scrollTop = 0;
     score = 0;
     scoreValue.textContent = score;
-    document.getElementById('mobileScoreValue').textContent = score;
-    
-    document.getElementById("dictionaryWordsContainer").innerHTML = '';
-    placeDictionaryWords();
-    placeRandomContent();
+    mobileScoreValue.textContent = score;
     
     container.addEventListener('scroll', handleContainerScroll);
     moveCursor();
+    
+    setTimeout(() => {
+        document.getElementById("dictionaryWordsContainer").innerHTML = '';
+        placeDictionaryWords();
+        placeRandomContent();
+    }, 100);
 }
 
 function startGame() {
