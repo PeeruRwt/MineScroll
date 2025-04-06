@@ -142,13 +142,13 @@ body.dark-mode {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        min-width: 60px;
+        min-width: 70px;
         border-radius: 5px; 
     }
 
     .mobile-score-label,
     .mobile-best-label {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 600;
         color: #1f2937;
         margin-bottom: 2px;
@@ -346,6 +346,7 @@ body.dark-mode {
     transition: border-color 0.3s;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+    will-change: transform;
 }
 
 @media (max-width: 480px) {
@@ -400,6 +401,8 @@ body.dark-mode {
         radial-gradient(circle at 90% 90%, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
     background-size: 100% 100%, 100% 100%, 100% 20px;
+    contain: strict;
+    backface-visibility: hidden;
 }
 
 .dark-mode .content {
@@ -427,6 +430,7 @@ body.dark-mode {
     top: 0;
     left: 0;
     transition: width 0.2s, background-color 0.2s;
+    will-change: transform, opacity;
 }
 
 .cursor.no-blink {
@@ -532,6 +536,7 @@ body.dark-mode {
     z-index: 1002;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s, color 0 3s;
+    animation-duration: 0.3s !important;
 }
 
 .dark-mode .popup {
@@ -1006,6 +1011,8 @@ input:checked + .slider:before {
     height: 1250000px;
     pointer-events: none;
     overflow: hidden;
+    contain: strict;
+    backface-visibility: hidden;
 }
 
 .user-text {
@@ -1063,6 +1070,8 @@ input:checked + .slider:before {
     height: 1250000px;
     pointer-events: none;
     overflow: hidden;
+    contain: strict;
+    backface-visibility: hidden;
 }
 
 .dictionary-word {
@@ -1196,4 +1205,26 @@ input:checked + .slider:before {
 
 .dark-mode .cursor-size-text {
     color: #E0E0E0;
+}
+
+button:focus, 
+button:active,
+.arrow-button:focus,
+.arrow-button:active,
+.icon-btn:focus,
+.icon-btn:active,
+.text-btn:focus,
+.text-btn:active,
+input:focus,
+input:active {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+button, 
+.arrow-button,
+.icon-btn,
+.text-btn {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent;
 }

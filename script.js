@@ -172,6 +172,15 @@ function handleContainerScroll() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Critical path initialization
+    initCoreGame();
+    
+    // Deferred initialization
+    requestIdleCallback(() => {
+        initUI();
+        preGenerateContent();
+    });
+
     container.addEventListener('scroll', preventScroll, { passive: false });
     container.addEventListener('scroll', handleContainerScroll);
     document.addEventListener('keydown', preventKeyScroll);
@@ -187,7 +196,9 @@ document.addEventListener("DOMContentLoaded", () => {
         hamburgerIcon.classList.remove('active');
         mobileMenu.classList.remove('show');
     });
+});
 
+function initCoreGame() {
     mobileScoreValue.textContent = score;
     mobileBestScoreValue.textContent = bestScore;
     
@@ -206,23 +217,19 @@ document.addEventListener("DOMContentLoaded", () => {
             option.classList.add('selected');
         }
     });
-    
+}
+
+function initUI() {
     const cursorSizeInput = document.getElementById('cursorSizeInput');
-    cursorSizeInput.value = savedCursorSize;
+    cursorSizeInput.value = localStorage.getItem('cursorSize') || '2';
     
     cursorSizeInput.addEventListener('input', function() {
         const rawValue = this.value;
-
         if (rawValue.length > 0) {
             let size = parseFloat(rawValue);
-            if (isNaN(size)) {
-                size = 2;
-            }
-            
+            if (isNaN(size)) size = 2;
             size = Math.max(1, Math.min(5, size));
-            
             this.value = size;
-            
             cursor.style.width = `${size}px`;
             localStorage.setItem('cursorSize', size);
         }
@@ -252,9 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
             this.value = 1;
         }
     });
-    
-    preGenerateContent();
-});
+}
 
 function preventKeyScroll(e) {
     if ((!isGameStarted || isGameOver) && (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown')) {
@@ -414,8 +419,11 @@ colorOptions.forEach(option => {
 });
 
 function preGenerateContent() {
-    placeRandomContent();
-    placeDictionaryWords();
+    generateContentChunk(0, 500);
+    setTimeout(() => {
+        generateContentChunk(500, totalLines);
+        placeDictionaryWords();
+    }, 300);
 }
 
 function generateRandomContent() {
@@ -481,7 +489,7 @@ function placeDictionaryWords() {
     processBatch();
 }
 
-function placeRandomContent() {
+function generateContentChunk(startLine, endLine) {
     const contentContainer = document.getElementById("userTextContainer");
     const colorClasses = [
         'blue-color',
@@ -495,39 +503,27 @@ function placeRandomContent() {
     userTextElements.forEach(el => contentContainer.appendChild(el));
 
     const randomDensity = isHardMode ? 0.15 : 0.12;
-    const batchSize = 500;
-    let currentLine = 24;
-    
-    function processBatch() {
-        const endLine = Math.min(currentLine + batchSize, totalLines);
-        
-        for (; currentLine < endLine; currentLine++) {
-            if (Math.random() < randomDensity) {
-                const randomContent = generateRandomContent();
-                const textElement = document.createElement("div");
-                textElement.className = "user-text";
-                
-                const randomValue = Math.random();
-                if (randomValue < 0.05) {
-                    textElement.classList.add('dark-grey');
-                } else if (randomValue < 0.1) {
-                    const randomColor = colorClasses[Math.floor(Math.random() * colorClasses.length)];
-                    textElement.classList.add(randomColor);
-                }
 
-                textElement.textContent = randomContent.content;
-                textElement.style.left = `${Math.floor(Math.random() * (container.clientWidth - 50))}px`;
-                textElement.style.top = `${currentLine * lineHeight}px`;
-                contentContainer.appendChild(textElement);
+    for (let currentLine = startLine; currentLine < endLine; currentLine++) {
+        if (Math.random() < randomDensity) {
+            const randomContent = generateRandomContent();
+            const textElement = document.createElement("div");
+            textElement.className = "user-text";
+            
+            const randomValue = Math.random();
+            if (randomValue < 0.05) {
+                textElement.classList.add('dark-grey');
+            } else if (randomValue < 0.1) {
+                const randomColor = colorClasses[Math.floor(Math.random() * colorClasses.length)];
+                textElement.classList.add(randomColor);
             }
-        }
-        
-        if (currentLine < totalLines) {
-            requestAnimationFrame(processBatch);
+
+            textElement.textContent = randomContent.content;
+            textElement.style.left = `${Math.floor(Math.random() * (container.clientWidth - 50))}px`;
+            textElement.style.top = `${currentLine * lineHeight}px`;
+            contentContainer.appendChild(textElement);
         }
     }
-    
-    processBatch();
 }
 
 function placeUserText(text) {
@@ -705,7 +701,7 @@ function triggerGameEndVibration() {
 function handlePageTransition() {
     container.classList.add('new-page-transition');
     
-    placeRandomContent();
+    generateContentChunk(0, totalLines);
     placeDictionaryWords();
     
     setTimeout(() => {
@@ -844,7 +840,7 @@ function resetGame() {
     setTimeout(() => {
         document.getElementById("dictionaryWordsContainer").innerHTML = '';
         placeDictionaryWords();
-        placeRandomContent();
+        generateContentChunk(0, totalLines);
     }, 100);
 }
 
