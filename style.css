@@ -376,7 +376,7 @@ body.dark-mode {
 
 .container.out-of-bounds {
     border-color: red;
-    animation: borderPulse 0.5s ease-in-out;
+    animation: none;
 }
 
 @keyframes borderPulse {
@@ -403,6 +403,7 @@ body.dark-mode {
     background-size: 100% 100%, 100% 100%, 100% 20px;
     contain: strict;
     backface-visibility: hidden;
+    transition: border-color 0.1s ease;
 }
 
 .dark-mode .content {

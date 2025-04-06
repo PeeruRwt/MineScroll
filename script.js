@@ -154,6 +154,7 @@ const dictionaryWords = [
 const totalPages = 625;
 const totalLines = 5000;
 const linesPerPage = totalLines / totalPages;
+const protectedLines = 24; 
 
 function preventScroll(e) {
     if (!isGameStarted || isGameOver) {
@@ -172,10 +173,8 @@ function handleContainerScroll() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Critical path initialization
     initCoreGame();
     
-    // Deferred initialization
     requestIdleCallback(() => {
         initUI();
         preGenerateContent();
@@ -460,7 +459,7 @@ function placeDictionaryWords() {
         const endLine = Math.min(currentLine + batchSize, totalLines);
         
         for (; currentLine < endLine; currentLine++) {
-            if (Math.random() < dictionaryDensity) {
+            if (currentLine >= protectedLines && Math.random() < dictionaryDensity) {
                 const word = dictionaryWords[Math.floor(Math.random() * dictionaryWords.length)];
                 const wordElement = document.createElement("div");
                 wordElement.className = "dictionary-word";
@@ -505,7 +504,8 @@ function generateContentChunk(startLine, endLine) {
     const randomDensity = isHardMode ? 0.15 : 0.12;
 
     for (let currentLine = startLine; currentLine < endLine; currentLine++) {
-        if (Math.random() < randomDensity) {
+      
+        if (currentLine >= protectedLines && Math.random() < randomDensity) {
             const randomContent = generateRandomContent();
             const textElement = document.createElement("div");
             textElement.className = "user-text";
@@ -885,6 +885,7 @@ let touchStartY = 0;
 container.addEventListener('touchstart', (event) => {
     if (!isGameOver && isGameStarted) {
         touchStartY = event.touches[0].clientY;
+        event.preventDefault();
     }
 });
 
@@ -893,11 +894,10 @@ container.addEventListener('touchmove', (event) => {
         const touchEndY = event.touches[0].clientY;
         const deltaY = touchEndY - touchStartY;
         container.scrollBy({
-            top: -deltaY,
+            top: -deltaY * 1.5,
             behavior: 'auto'
         });
         touchStartY = touchEndY;
-    } else if (!isGameStarted) {
         event.preventDefault();
     }
 });
