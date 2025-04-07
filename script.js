@@ -155,6 +155,7 @@ const totalPages = 625;
 const totalLines = 5000;
 const linesPerPage = totalLines / totalPages;
 const protectedLines = 24;
+const contentGenerationChunkSize = 100;
 
 function preventScroll(e) {
     if (!isGameStarted || isGameOver) {
@@ -803,14 +804,18 @@ function moveCursor() {
 }
 
 function resetGame() {
+    // Clear any pending game loop immediately
     if (gameTimeout) {
         clearTimeout(gameTimeout);
         gameTimeout = null;
     }
-    
-    // Immediate visual reset with forced reflow
+
+    // PHASE 1: INSTANT VISUAL RESET
+    // Force synchronous style updates
     container.classList.remove('out-of-bounds');
-    void container.offsetWidth; // Force synchronous style update
+    void container.offsetWidth; // Trigger reflow
+    
+    // Hide restart popup immediately
     restartPopup.style.display = 'none';
     
     // Reset game state
@@ -821,26 +826,87 @@ function resetGame() {
     isMovingDownward = true;
     upwardMovementCount = 0;
     linesMoved = 0;
-    container.scrollTop = 0;
     score = 0;
-    scoreValue.textContent = score;
-    mobileScoreValue.textContent = score;
-
+    scoreValue.textContent = '0';
+    mobileScoreValue.textContent = '0';
+    
     // Reset cursor - immediate update
     cursor.style.display = 'block';
     cursor.style.top = '0px';
     cursor.style.left = '0px';
     cursor.classList.remove('no-blink');
     
-    // Start game immediately
+    // Reset scroll position
+    container.scrollTop = 0;
+    
+    // Start game IMMEDIATELY with empty container
     moveCursor();
     
-    // Non-blocking content regeneration
-    requestAnimationFrame(() => {
-        document.getElementById("dictionaryWordsContainer").innerHTML = '';
-        placeDictionaryWords();
-        generateContentChunk(0, totalLines);
-    });
+    // PHASE 2: BACKGROUND CONTENT REGENERATION
+    // Clear existing content without blocking
+    const userTextContainer = document.getElementById("userTextContainer");
+    const dictionaryContainer = document.getElementById("dictionaryWordsContainer");
+    
+    // Preserve user-placed texts
+    const userPlacedTexts = Array.from(userTextContainer.querySelectorAll('.user-text.colored'));
+    
+    // Clear containers efficiently
+    userTextContainer.innerHTML = '';
+    dictionaryContainer.innerHTML = '';
+    
+    // Reattach user-placed texts
+    userPlacedTexts.forEach(text => userTextContainer.appendChild(text));
+    
+    // Generate new content in chunks without blocking
+    let currentLine = 0;
+    
+    function generateContentChunk() {
+        const endLine = Math.min(currentLine + contentGenerationChunkSize, totalLines);
+        
+        // Skip first 24 protected lines
+        const startLine = currentLine < protectedLines ? protectedLines : currentLine;
+        
+        if (startLine < endLine) {
+            // Generate small chunk of content
+            const fragment = document.createDocumentFragment();
+            
+            // Generate random content
+            for (let line = startLine; line < endLine; line++) {
+                if (Math.random() < (isHardMode ? 0.15 : 0.12)) {
+                    const randomContent = generateRandomContent();
+                    const textElement = document.createElement("div");
+                    textElement.className = "user-text";
+                    
+                    const randomValue = Math.random();
+                    if (randomValue < 0.05) {
+                        textElement.classList.add('dark-grey');
+                    } else if (randomValue < 0.1) {
+                        const colorClasses = ['blue-color', 'red-color', 'yellow-color', 'green-color'];
+                        const randomColor = colorClasses[Math.floor(Math.random() * colorClasses.length)];
+                        textElement.classList.add(randomColor);
+                    }
+
+                    textElement.textContent = randomContent.content;
+                    textElement.style.left = `${Math.floor(Math.random() * (container.clientWidth - 50))}px`;
+                    textElement.style.top = `${line * lineHeight}px`;
+                    fragment.appendChild(textElement);
+                }
+            }
+            
+            userTextContainer.appendChild(fragment);
+            currentLine = endLine;
+        }
+        
+        if (currentLine < totalLines) {
+            requestIdleCallback(generateContentChunk);
+        } else {
+            // After all content generated, place dictionary words
+            placeDictionaryWords();
+        }
+    }
+    
+    // Start background generation
+    requestIdleCallback(generateContentChunk);
 }
 
 function startGame() {
