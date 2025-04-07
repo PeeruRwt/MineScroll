@@ -196,6 +196,11 @@ document.addEventListener("DOMContentLoaded", () => {
         hamburgerIcon.classList.remove('active');
         mobileMenu.classList.remove('show');
     });
+
+    // Initialize Share Sidebar (only for desktop)
+    if (window.innerWidth > 1020) {
+        initShareSidebar();
+    }
 });
 
 function initCoreGame() {
@@ -804,21 +809,16 @@ function moveCursor() {
 }
 
 function resetGame() {
-    // Clear any pending game loop immediately
     if (gameTimeout) {
         clearTimeout(gameTimeout);
         gameTimeout = null;
     }
 
-    // PHASE 1: INSTANT VISUAL RESET
-    // Force synchronous style updates
     container.classList.remove('out-of-bounds');
-    void container.offsetWidth; // Trigger reflow
+    void container.offsetWidth;
     
-    // Hide restart popup immediately
     restartPopup.style.display = 'none';
     
-    // Reset game state
     topPosition = 0;
     isGameStarted = true;
     isGameOver = false;
@@ -830,47 +830,35 @@ function resetGame() {
     scoreValue.textContent = '0';
     mobileScoreValue.textContent = '0';
     
-    // Reset cursor - immediate update
     cursor.style.display = 'block';
     cursor.style.top = '0px';
     cursor.style.left = '0px';
     cursor.classList.remove('no-blink');
     
-    // Reset scroll position
     container.scrollTop = 0;
     
-    // Start game IMMEDIATELY with empty container
     moveCursor();
     
-    // PHASE 2: BACKGROUND CONTENT REGENERATION
-    // Clear existing content without blocking
     const userTextContainer = document.getElementById("userTextContainer");
     const dictionaryContainer = document.getElementById("dictionaryWordsContainer");
     
-    // Preserve user-placed texts
     const userPlacedTexts = Array.from(userTextContainer.querySelectorAll('.user-text.colored'));
     
-    // Clear containers efficiently
     userTextContainer.innerHTML = '';
     dictionaryContainer.innerHTML = '';
     
-    // Reattach user-placed texts
     userPlacedTexts.forEach(text => userTextContainer.appendChild(text));
     
-    // Generate new content in chunks without blocking
     let currentLine = 0;
     
     function generateContentChunk() {
         const endLine = Math.min(currentLine + contentGenerationChunkSize, totalLines);
         
-        // Skip first 24 protected lines
         const startLine = currentLine < protectedLines ? protectedLines : currentLine;
         
         if (startLine < endLine) {
-            // Generate small chunk of content
             const fragment = document.createDocumentFragment();
             
-            // Generate random content
             for (let line = startLine; line < endLine; line++) {
                 if (Math.random() < (isHardMode ? 0.15 : 0.12)) {
                     const randomContent = generateRandomContent();
@@ -900,12 +888,10 @@ function resetGame() {
         if (currentLine < totalLines) {
             requestIdleCallback(generateContentChunk);
         } else {
-            // After all content generated, place dictionary words
             placeDictionaryWords();
         }
     }
     
-    // Start background generation
     requestIdleCallback(generateContentChunk);
 }
 
@@ -966,3 +952,96 @@ container.addEventListener('touchmove', (event) => {
         event.preventDefault();
     }
 });
+
+/* Share Sidebar Functionality (only for desktop) */
+function initShareSidebar() {
+    const shareButtons = document.querySelectorAll('.share-button');
+    const sidebar = document.querySelector('.social-share-sidebar');
+    const toggleCollapse = document.querySelector('.toggle-collapse');
+    let isCollapsed = false;
+
+    setTimeout(() => {
+        toggleCollapse.classList.remove('visible');
+    }, 2000);
+
+    toggleCollapse.addEventListener('click', function() {
+        isCollapsed = !isCollapsed;
+        
+        if (isCollapsed) {
+            sidebar.classList.add('collapsed');
+            toggleCollapse.classList.add('collapsed');
+            toggleCollapse.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        } else {
+            sidebar.classList.remove('collapsed');
+            toggleCollapse.classList.remove('collapsed');
+            toggleCollapse.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        }
+        
+        if (isCollapsed) {
+            setTimeout(() => {
+                toggleCollapse.classList.remove('visible');
+            }, 1000);
+        }
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (e.clientX < 70 && !isCollapsed) {
+            toggleCollapse.classList.add('visible');
+        } else if (e.clientX > 70 && !isCollapsed) {
+            toggleCollapse.classList.remove('visible');
+        }
+        
+        if (isCollapsed && e.clientX < 30) {
+            toggleCollapse.classList.add('visible');
+        } else if (isCollapsed && e.clientX > 30) {
+            toggleCollapse.classList.remove('visible');
+        }
+    });
+
+    shareButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const platform = this.getAttribute('data-platform');
+            shareOnPlatform(platform);
+        });
+    });
+
+    function shareOnPlatform(platform) {
+        const currentUrl = encodeURIComponent(window.location.href);
+        const currentTitle = encodeURIComponent(document.title);
+        let shareUrl = '';
+
+        switch(platform) {
+            case 'facebook':
+                shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
+                window.open(shareUrl, 'fb-share-dialog', 'width=626,height=436');
+                break;
+            case 'twitter':
+                shareUrl = `https://twitter.com/intent/tweet?url=${currentUrl}&text=${currentTitle}`;
+                window.open(shareUrl, 'twitter-share', 'width=550,height=420');
+                break;
+            case 'pinterest':
+                const image = document.querySelector('meta[property="og:image"]')?.content || '';
+                shareUrl = `https://pinterest.com/pin/create/button/?url=${currentUrl}&media=${encodeURIComponent(image)}&description=${currentTitle}`;
+                window.open(shareUrl, 'pinterest-share', 'width=750,height=600');
+                break;
+            case 'linkedin':
+                shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}`;
+                window.open(shareUrl, 'linkedin-share', 'width=600,height=500');
+                break;
+            case 'email':
+                shareUrl = `mailto:?subject=${currentTitle}&body=Check%20this%20out:%20${currentUrl}`;
+                window.location.href = shareUrl;
+                break;
+            case 'more':
+                if (navigator.share) {
+                    navigator.share({
+                        title: document.title,
+                        url: window.location.href
+                    }).catch(console.error);
+                } else {
+                    alert('More sharing options would open here');
+                }
+                break;
+        }
+    }
+}
