@@ -154,7 +154,7 @@ const dictionaryWords = [
 const totalPages = 625;
 const totalLines = 5000;
 const linesPerPage = totalLines / totalPages;
-const protectedLines = 24; 
+const protectedLines = 24;
 
 function preventScroll(e) {
     if (!isGameStarted || isGameOver) {
@@ -504,7 +504,6 @@ function generateContentChunk(startLine, endLine) {
     const randomDensity = isHardMode ? 0.15 : 0.12;
 
     for (let currentLine = startLine; currentLine < endLine; currentLine++) {
-      
         if (currentLine >= protectedLines && Math.random() < randomDensity) {
             const randomContent = generateRandomContent();
             const textElement = document.createElement("div");
@@ -806,26 +805,19 @@ function moveCursor() {
 function resetGame() {
     if (gameTimeout) {
         clearTimeout(gameTimeout);
+        gameTimeout = null;
     }
     
-    topPosition = 0;
-    cursor.style.display = 'none';
-    cursor.style.top = '0px';
-    cursor.style.left = '0px';
-    cursor.classList.remove('no-blink');
-    
-    const savedCursorSize = localStorage.getItem('cursorSize') || '2';
-    const savedCursorColor = localStorage.getItem('cursorColor');
-    cursor.style.width = `${savedCursorSize}px`;
-    cursor.style.backgroundColor = savedCursorColor || 
-        (document.body.classList.contains('dark-mode') ? 'white' : 'black');
-    
+    // Immediate visual reset with forced reflow
     container.classList.remove('out-of-bounds');
+    void container.offsetWidth; // Force synchronous style update
     restartPopup.style.display = 'none';
+    
+    // Reset game state
+    topPosition = 0;
     isGameStarted = true;
     isGameOver = false;
     playButton.style.display = 'none';
-    cursor.style.display = 'block';
     isMovingDownward = true;
     upwardMovementCount = 0;
     linesMoved = 0;
@@ -833,15 +825,22 @@ function resetGame() {
     score = 0;
     scoreValue.textContent = score;
     mobileScoreValue.textContent = score;
+
+    // Reset cursor - immediate update
+    cursor.style.display = 'block';
+    cursor.style.top = '0px';
+    cursor.style.left = '0px';
+    cursor.classList.remove('no-blink');
     
-    container.addEventListener('scroll', handleContainerScroll);
+    // Start game immediately
     moveCursor();
     
-    setTimeout(() => {
+    // Non-blocking content regeneration
+    requestAnimationFrame(() => {
         document.getElementById("dictionaryWordsContainer").innerHTML = '';
         placeDictionaryWords();
         generateContentChunk(0, totalLines);
-    }, 100);
+    });
 }
 
 function startGame() {
