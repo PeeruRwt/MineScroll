@@ -1230,148 +1230,151 @@ button,
     -webkit-tap-highlight-color: transparent;
 }
 
-@media (min-width: 1021px) {
+.social-share-sidebar {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45px;
+    background-color: white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 0 6px 6px 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.social-share-sidebar.collapsed {
+    left: -45px;
+}
+
+.share-buttons-container {
+    width: 100%;
+}
+
+.share-buttons {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.share-button {
+    position: relative;
+    height: 42px;
+    width: 45px;
+    overflow: hidden;
+    transition: width 0.3s ease;
+    cursor: pointer;
+    margin: 0;
+}
+
+.share-button-content {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    padding: 10px 8px;
+    width: 160px;
+    transition: background-color 0.2s;
+    z-index: 1001;
+}
+
+.share-button:hover {
+    width: 160px;
+}
+
+.share-button:hover .share-button-content {
+    background-color: #f9f9f9;
+}
+
+.share-button i {
+    font-size: 20px;
+    min-width: 25px;
+    text-align: center;
+}
+
+.share-button .platform-name {
+    margin-left: 12px;
+    white-space: nowrap;
+    font-size: 12px;
+    color: #333;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.1s;
+}
+
+.share-button:hover .platform-name {
+    opacity: 1;
+}
+
+.facebook { color: #3b5998; }
+.twitter { color: #000000; }
+.pinterest { color: #e60023; }
+.email { color: #666666; }
+.linkedin { color: #0077b5; }
+.share-others { color: #4CAF50; }
+
+.toggle-collapse {
+    position: absolute;
+    left: 45px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 45px;
+    background-color: #e0e0e0;
+    border-radius: 0 6px 6px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 999;
+    opacity: 0;
+}
+
+.toggle-collapse:hover {
+    opacity: 1;
+}
+
+.toggle-collapse.visible {
+    opacity: 1;
+}
+
+.toggle-collapse.collapsed {
+    left: 0;
+}
+
+.toggle-collapse i {
+    color: #333;
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.dark-mode .social-share-sidebar {
+    background-color: #1e1e1e;
+}
+
+.dark-mode .share-button-content {
+    background-color: #2d2d2d;
+}
+
+.dark-mode .share-button:hover .share-button-content {
+    background-color: #333;
+}
+
+.dark-mode .platform-name {
+    color: #E0E0E0;
+}
+
+.dark-mode .toggle-collapse {
+    background-color: #333;
+}
+
+.dark-mode .toggle-collapse i {
+    color: #E0E0E0;
+}
+
+@media (max-width: 1020px) {
     .social-share-sidebar {
-        position: fixed;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 45px;
-        background-color: white;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        border-radius: 0 6px 6px 0;
-        z-index: 1000;
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
-
-    .sidebar-inner {
-        width: 100%;
-        height: 100%;
-        position: relative;
-    }
-
-    .social-share-sidebar.collapsed {
-        left: -45px;
-    }
-
-    .share-buttons {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        width: 100%;
-    }
-
-    .share-button {
-        position: relative;
-        height: 42px;
-        width: 100%;
-        overflow: hidden;
-        transition: width 0.3s ease;
-        cursor: pointer;
-    }
-
-    .share-button-content {
-        position: absolute;
-        display: flex;
-        align-items: center;
-        padding: 10px 8px;
-        width: 160px;
-        transition: background-color 0.2s;
-        left: 0;
-    }
-
-    .share-button:hover {
-        width: 160px;
-    }
-
-    .share-button:hover .share-button-content {
-        background-color: #f9f9f9;
-    }
-
-    .share-button i {
-        font-size: 20px;
-        min-width: 25px;
-        text-align: center;
-    }
-
-    .share-button .platform-name {
-        margin-left: 12px;
-        white-space: nowrap;
-        font-size: 12px;
-        color: #333;
-        opacity: 0;
-        transition: opacity 0.3s ease 0.1s;
-    }
-
-    .share-button:hover .platform-name {
-        opacity: 1;
-    }
-
-    .facebook { color: #3b5998; }
-    .twitter { color: #000000; }
-    .pinterest { color: #e60023; }
-    .email { color: #666666; }
-    .linkedin { color: #0077b5; }
-    .share-others { color: #4CAF50; }
-
-    .toggle-collapse {
-        position: fixed;
-        left: 45px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 18px;
-        height: 45px;
-        background-color: #e0e0e0;
-        border-radius: 0 6px 6px 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        z-index: 999;
-        opacity: 0;
-    }
-
-    .toggle-collapse:hover {
-        opacity: 1;
-    }
-
-    .toggle-collapse.visible {
-        opacity: 1;
-    }
-
-    .toggle-collapse.collapsed {
-        left: 0;
-    }
-
-    .toggle-collapse i {
-        color: #333;
-        font-size: 12px;
-        transition: transform 0.3s ease;
-    }
-
-    .dark-mode .social-share-sidebar {
-        background-color: #1e1e1e;
-    }
-
-    .dark-mode .share-button-content {
-        background-color: #2d2d2d;
-    }
-
-    .dark-mode .share-button:hover .share-button-content {
-        background-color: #333;
-    }
-
-    .dark-mode .platform-name {
-        color: #E0E0E0;
-    }
-
-    .dark-mode .toggle-collapse {
-        background-color: #333;
-    }
-
-    .dark-mode .toggle-collapse i {
-        color: #E0E0E0;
+        display: none;
     }
 }

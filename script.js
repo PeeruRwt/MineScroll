@@ -197,7 +197,6 @@ document.addEventListener("DOMContentLoaded", () => {
         mobileMenu.classList.remove('show');
     });
 
-    // Initialize Share Sidebar (only for desktop)
     if (window.innerWidth > 1020) {
         initShareSidebar();
     }
@@ -953,7 +952,6 @@ container.addEventListener('touchmove', (event) => {
     }
 });
 
-/* Share Sidebar Functionality (only for desktop) */
 function initShareSidebar() {
     const shareButtons = document.querySelectorAll('.share-button');
     const sidebar = document.querySelector('.social-share-sidebar');
