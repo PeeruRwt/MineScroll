@@ -149,6 +149,7 @@ const dictionaryWords = [
     'throwing', 'understand', 'understands', 'understood', 'understanding', 'wake', 'wakes', 'woke', 'woken', 'waking',
     'wear', 'wears', 'wore', 'worn', 'wearing', 'win', 'wins', 'won', 'winning', 'write',
     'writes', 'wrote', 'written', 'writing'
+
 ];
 
 const totalPages = 625;

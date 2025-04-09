@@ -524,7 +524,7 @@ body.dark-mode {
 
 .popup {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -666,7 +666,7 @@ body.dark-mode {
 }
 
 #popup {
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 49.6%;
     transform: translate(-50%, -50%);
@@ -945,7 +945,7 @@ input:checked + .slider:before {
 
 .popup {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -1377,4 +1377,87 @@ button,
     .social-share-sidebar {
         display: none;
     }
+}
+.game-info-section {
+    width: 420px;
+    margin: 20px auto 0;
+    background-color: var(--page-bg-color, #fff);
+    color: var(--text-color, #000);
+    padding-top: 20px;
+}
+
+.game-info-content {
+    padding: 0 15px;
+    text-align: left;
+}
+
+.game-info-section h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.game-info-section h3 {
+    font-size: 18px;
+    margin: 15px 0 10px;
+}
+
+.game-info-section p {
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.game-info-section ol {
+    padding-left: 20px;
+}
+
+.game-info-section li {
+    margin-bottom: 8px;
+}
+
+.dotted-line {
+    border-top: 1px solid #D2B48C;
+    margin: 15px 0;
+}
+
+@media (max-width: 480px) {
+    .game-info-section {
+        width: 90vw;
+        max-width: 400px;
+    }
+}
+
+.dark-mode .game-info-section {
+    color: #E0E0E0;
+}
+
+.dark-mode .dotted-line {
+    border-color: #888;
+}
+
+.footer-content {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #D2B48C;
+}
+
+.dark-mode .footer-content {
+    color: #E0E0E0;
+}
+
+.privacy-link {
+    color: #000000;
+    text-decoration: none;
+    font-size: 12px;
+    display: block;
+    margin-top: 8px;
+}
+
+.dark-mode .privacy-link {
+    color: #8ab4f8;
+}
+
+.privacy-link:hover {
+    text-decoration: underline;
 }
