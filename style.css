@@ -1378,6 +1378,7 @@ button,
         display: none;
     }
 }
+
 .game-info-section {
     width: 420px;
     margin: 20px auto 0;
@@ -1420,21 +1421,6 @@ button,
     margin: 15px 0;
 }
 
-@media (max-width: 480px) {
-    .game-info-section {
-        width: 90vw;
-        max-width: 400px;
-    }
-}
-
-.dark-mode .game-info-section {
-    color: #E0E0E0;
-}
-
-.dark-mode .dotted-line {
-    border-color: #888;
-}
-
 .footer-content {
     text-align: center;
     margin-top: 20px;
@@ -1449,7 +1435,7 @@ button,
 .privacy-link {
     color: #000000;
     text-decoration: none;
-    font-size: 12px;
+    font-size: 14px;
     display: block;
     margin-top: 8px;
 }
@@ -1460,4 +1446,19 @@ button,
 
 .privacy-link:hover {
     text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .game-info-section {
+        width: 90vw;
+        max-width: 400px;
+    }
+}
+
+.dark-mode .game-info-section {
+    color: #E0E0E0;
+}
+
+.dark-mode .dotted-line {
+    border-color: #888;
 }
