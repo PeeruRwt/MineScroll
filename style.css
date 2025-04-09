@@ -1387,6 +1387,11 @@ button,
     padding-top: 20px;
 }
 
+.dark-mode .game-info-section {
+    background-color: rgb(18, 18, 18);
+    color: #E0E0E0;
+}
+
 .game-info-content {
     padding: 0 15px;
     text-align: left;
@@ -1396,16 +1401,19 @@ button,
     font-size: 20px;
     margin-bottom: 15px;
     text-align: center;
+    color: inherit;
 }
 
 .game-info-section h3 {
     font-size: 18px;
     margin: 15px 0 10px;
+    color: inherit;
 }
 
 .game-info-section p {
     margin-bottom: 10px;
     line-height: 1.4;
+    color: inherit;
 }
 
 .game-info-section ol {
@@ -1414,6 +1422,7 @@ button,
 
 .game-info-section li {
     margin-bottom: 8px;
+    color: inherit;
 }
 
 .dotted-line {
@@ -1421,19 +1430,19 @@ button,
     margin: 15px 0;
 }
 
+.dark-mode .dotted-line {
+    border-color: #5a5a5a;
+}
+
 .footer-content {
     text-align: center;
     margin-top: 20px;
     font-size: 14px;
-    color: #D2B48C;
-}
-
-.dark-mode .footer-content {
-    color: #E0E0E0;
+    color: inherit;
 }
 
 .privacy-link {
-    color: #000000;
+    color: #4285F4;
     text-decoration: none;
     font-size: 14px;
     display: block;
@@ -1453,12 +1462,4 @@ button,
         width: 90vw;
         max-width: 400px;
     }
-}
-
-.dark-mode .game-info-section {
-    color: #E0E0E0;
-}
-
-.dark-mode .dotted-line {
-    border-color: #888;
 }
