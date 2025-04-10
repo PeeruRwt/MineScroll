@@ -392,15 +392,15 @@ body.dark-mode {
     background: repeating-linear-gradient(
         to bottom,
         transparent,
-        transparent 19px,
-        #D1D5DB 19px,
-        #D1D5DB 20px
+        transparent 22px,
+        #888 22px, 
+        #888 23px 
     );
     background-image:
         radial-gradient(circle at 10% 10%, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
         radial-gradient(circle at 90% 90%, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 100% 20px;
+    background-size: 100% 100%, 100% 100%, 100% 23px;
     contain: strict;
     backface-visibility: hidden;
     transition: border-color 0.1s ease;
@@ -410,21 +410,21 @@ body.dark-mode {
     background: repeating-linear-gradient(
         to bottom,
         transparent,
-        transparent 19px,
-        #5a5a5a 19px,  
-        #5a5a5a 20px
+        transparent 22px,
+        #777 22px,  
+        #777 23px  
     );
     background-image:
         radial-gradient(circle at 10% 10%, rgba(0, 0, 0, 0.3) 1px, transparent 1px), 
         radial-gradient(circle at 90% 90%, rgba(0, 0, 0, 0.3) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 1px, transparent 1px); 
-    background-size: 100% 100%, 100% 100%, 100% 20px;
+    background-size: 100% 100%, 100% 100%, 100% 23px;
 }
 
 .cursor {
     position: absolute;
-    width: 1.7px;
-    height: 20px;
+    width: 2 px;
+    height: 23px;
     background-color: black;
     animation: blink 1s steps(2, start) infinite;
     display: none;
@@ -1018,14 +1018,14 @@ input:checked + .slider:before {
 
 .user-text {
     position: absolute;
-    font-size: 14px;
+    font-size: 15px;
     color: #000;
     white-space: nowrap;
     pointer-events: none;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 20px;
+    line-height: 23px;
     user-select: none;
 }
 
@@ -1077,14 +1077,14 @@ input:checked + .slider:before {
 
 .dictionary-word {
     position: absolute;
-    font-size: 14px;
+    font-size: 15px;
     color: #000;
     white-space: nowrap;
     pointer-events: none;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 20px;
+    line-height: 23px;
     user-select: none;
 }
 

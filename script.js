@@ -26,7 +26,8 @@ const bestScoreValue = document.getElementById('bestScoreValue');
 const finalScore = document.getElementById('finalScore');
 const mobileScoreValue = document.getElementById('mobileScoreValue');
 const mobileBestScoreValue = document.getElementById('mobileBestScoreValue');
-const lineHeight = 20;
+const helpPopup = document.getElementById('helpPopup');
+const lineHeight = 23;
 const containerHeight = container.clientHeight;
 const upperThreshold = containerHeight * 0.25;
 let topPosition = 0;
@@ -48,6 +49,7 @@ const maxPlacementsPerVisit = 5;
 let occupiedLines = new Set();
 
 const dictionaryWords = [
+    
     'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I',
     'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
     'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
@@ -149,7 +151,6 @@ const dictionaryWords = [
     'throwing', 'understand', 'understands', 'understood', 'understanding', 'wake', 'wakes', 'woke', 'woken', 'waking',
     'wear', 'wears', 'wore', 'worn', 'wearing', 'win', 'wins', 'won', 'winning', 'write',
     'writes', 'wrote', 'written', 'writing'
-
 ];
 
 const totalPages = 625;
@@ -158,23 +159,21 @@ const linesPerPage = totalLines / totalPages;
 const protectedLines = 24;
 const contentGenerationChunkSize = 100;
 
-function preventScroll(e) {
-    if (!isGameStarted || isGameOver) {
-        e.preventDefault();
-    }
-}
-
-function handleContainerScroll() {
-    if (container.scrollTop < 0) {
-        container.scrollTop = 0;
-    }
-    const maxScroll = content.clientHeight - container.clientHeight;
-    if (container.scrollTop > maxScroll) {
-        container.scrollTop = maxScroll;
-    }
-}
+helpPopup.style.display = 'none';
+helpPopup.style.opacity = '0';
+helpPopup.style.transition = 'opacity 0.3s ease';
 
 document.addEventListener("DOMContentLoaded", () => {
+    if (!localStorage.getItem('hasVisitedBefore')) {
+        localStorage.setItem('hasVisitedBefore', 'true');
+        setTimeout(() => {
+            helpPopup.style.display = 'block';
+            setTimeout(() => {
+                helpPopup.style.opacity = '1';
+            }, 10);
+        }, 300);
+    }
+
     initCoreGame();
     
     requestIdleCallback(() => {
@@ -202,6 +201,22 @@ document.addEventListener("DOMContentLoaded", () => {
         initShareSidebar();
     }
 });
+
+function preventScroll(e) {
+    if (!isGameStarted || isGameOver) {
+        e.preventDefault();
+    }
+}
+
+function handleContainerScroll() {
+    if (container.scrollTop < 0) {
+        container.scrollTop = 0;
+    }
+    const maxScroll = content.clientHeight - container.clientHeight;
+    if (container.scrollTop > maxScroll) {
+        container.scrollTop = maxScroll;
+    }
+}
 
 function initCoreGame() {
     mobileScoreValue.textContent = score;
@@ -266,18 +281,6 @@ function initUI() {
     });
 }
 
-function preventKeyScroll(e) {
-    if ((!isGameStarted || isGameOver) && (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown')) {
-        e.preventDefault();
-    }
-}
-
-function preventTouchScroll(e) {
-    if (!isGameStarted || isGameOver) {
-        e.preventDefault();
-    }
-}
-
 for (const [btnId, popupId] of Object.entries(popups)) {
     const btn = document.getElementById(btnId);
     if (btn) {
@@ -287,7 +290,18 @@ for (const [btnId, popupId] of Object.entries(popups)) {
                 restartPopup.style.display = 'none';
             }
             for (const popup of Object.values(popups)) {
-                document.getElementById(popup).style.display = popup === popupId ? 'block' : 'none';
+                const popupElement = document.getElementById(popup);
+                if (popup === popupId) {
+                    popupElement.style.display = 'block';
+                    setTimeout(() => {
+                        popupElement.style.opacity = '1';
+                    }, 10);
+                } else {
+                    popupElement.style.opacity = '0';
+                    setTimeout(() => {
+                        popupElement.style.display = 'none';
+                    }, 300);
+                }
             }
             hamburgerIcon.classList.remove('active');
             mobileMenu.classList.remove('show');
@@ -300,10 +314,14 @@ for (const [btnId, popupId] of Object.entries(closeButtons)) {
     if (btn) {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            document.getElementById(popupId).style.display = 'none';
-            if (restartPopup.style.display === 'none' && isGameOver) {
-                restartPopup.style.display = 'block';
-            }
+            const popupElement = document.getElementById(popupId);
+            popupElement.style.opacity = '0';
+            setTimeout(() => {
+                popupElement.style.display = 'none';
+                if (restartPopup.style.display === 'none' && isGameOver) {
+                    restartPopup.style.display = 'block';
+                }
+            }, 300);
             hamburgerIcon.classList.remove('active');
             mobileMenu.classList.remove('show');
         });
@@ -322,7 +340,11 @@ document.addEventListener('click', (e) => {
     
     if (!clickedInsidePopup) {
         for (const popupId of Object.values(popups)) {
-            document.getElementById(popupId).style.display = 'none';
+            const popupElement = document.getElementById(popupId);
+            popupElement.style.opacity = '0';
+            setTimeout(() => {
+                popupElement.style.display = 'none';
+            }, 300);
         }
         if (restartPopup.style.display === 'none' && isGameOver) {
             restartPopup.style.display = 'block';
@@ -331,6 +353,18 @@ document.addEventListener('click', (e) => {
         mobileMenu.classList.remove('show');
     }
 });
+
+function preventKeyScroll(e) {
+    if ((!isGameStarted || isGameOver) && (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown')) {
+        e.preventDefault();
+    }
+}
+
+function preventTouchScroll(e) {
+    if (!isGameStarted || isGameOver) {
+        e.preventDefault();
+    }
+}
 
 const plusInput = document.getElementById("plusInput");
 plusInput.addEventListener("input", function () {
@@ -617,29 +651,30 @@ document.getElementById("placeButton").addEventListener("click", () => {
 
 function getRandomSpeed() {
     const fractionalValues = [
-        1, 1.3, 1.6, 1.9, 2.2, 2.5, 2.8, 3.1, 3.4, 3.7, 4.0, 4.3, 4.6, 4.9, 5.2, 5.5, 5.8, 6.1, 6.4, 6.7, 7.0, 7.3, 7.6, 7.9, 8.2, 8.5, 
-        8.8, 9.1, 9.4, 9.7, 10.0, 10.3, 10.6, 10.9, 11.2, 11.5, 11.8, 12.1, 12.4, 12.7, 13.0, 13.3, 13.6, 13.9, 14.2, 14.5, 
-        14.8, 15.1, 15.4, 15.7, 16.0, 16.3, 16.6, 16.9, 17.2, 17.5, 17.8, 18.1, 18.4, 18.7, 19.0, 19.3, 19.6, 19.9, 20.0
+        5.0, 5.3, 5.6, 5.9, 6.2, 6.5, 6.8, 7.1, 7.4, 7.7, 8.0, 8.3, 8.6, 8.9, 9.2, 9.5, 
+        9.8, 10.1, 10.4, 10.7, 11.0, 11.3, 11.6, 11.9, 12.2, 12.5, 12.8, 13.1, 13.4, 13.7, 
+        14.0, 14.3, 14.6, 14.9, 15.2, 15.5, 15.8, 16.1, 16.4, 16.7, 17.0, 17.3, 17.6, 17.9, 
+        18.2, 18.5, 18.8, 19.1, 19.4, 19.7, 20.0
     ];
     
     let baseSpeed;
     if (!isHardMode) {
         if (score <= 50) {
             const progress = score / 50;
-            baseSpeed = 1 + (progress * 14); 
+            baseSpeed = 5 + (progress * 10); // Start at 5x speed
         } else {
             const post50Progress = Math.min(1, (score - 50) / 50);
-            baseSpeed = 15 + (post50Progress * 5); 
+            baseSpeed = 15 + (post50Progress * 5);
         }
     } else {
         if (score <= 50) {
             const progress = score / 50;
-            baseSpeed = 1 + (progress * 19); 
+            baseSpeed = 5 + (progress * 15); // Start at 5x speed
         } else {
             if (Math.random() < 0.005) {
                 baseSpeed = 20 + (Math.random() * 5);
             } else {
-                baseSpeed = 20; 
+                baseSpeed = 20;
             }
         }
     }
@@ -766,7 +801,8 @@ function moveCursor() {
             }
         }
 
-        cursor.style.top = `${Math.round(topPosition / lineHeight) * lineHeight}px`;
+        // Fixed cursor alignment with lines
+        cursor.style.top = `${Math.floor(topPosition / lineHeight) * lineHeight}px`;
 
         if (!soundToggle.checked) {
             cursorSound.currentTime = 0;
