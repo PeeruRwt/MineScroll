@@ -83,7 +83,10 @@
             <div class="icon-btn" id="plusBtn">
                 <img src="https://cdn-icons-png.flaticon.com/512/1828/1828925.png" alt="Plus" class="icon">
             </div>
-            <div class="text-btn" id="scoreBtn">Score :<span id="scoreValue">0</span></div>
+            <div class="text-btn" id="scoreBtn">
+                <div class="score-label">Score</div>
+                <div class="score-number" id="scoreValue">0</div>
+            </div>
         </div>
         
         <div class="center-scores">
@@ -98,7 +101,10 @@
         </div>
 
         <div class="right-group">
-            <div class="text-btn"><span id="bestScoreValue">0</span>: Best</div>
+            <div class="text-btn">
+                <div class="best-label">Best</div>
+                <div class="best-number" id="bestScoreValue">0</div>
+            </div>
             <div class="icon-btn" id="fullscreenBtn">
                 <img src="https://cdn-icons-png.flaticon.com/512/2089/2089670.png" alt="Fullscreen" class="icon">
             </div>
@@ -197,6 +203,13 @@
                     <span class="cursor-size-text">px</span>
                 </div>
             </div>
+            <div class="settings-item">
+                <div class="settings-title">Stickman</div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="stickmanToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
         </div>
     </div>
 
@@ -204,12 +217,39 @@
         <div class="container">
             <div class="content">
                 <div class="cursor" id="cursor"></div>
+                <div class="stickman" id="stickman"></div>
                 <div id="userTextContainer" class="user-text-container"></div>
                 <div id="dictionaryWordsContainer" class="dictionary-words-container"></div>
             </div>
         </div>
         <div class="arrow-button" id="arrowButton"></div>
     </div>
+
+    <div class="character-selection">
+        <div class="character-card" id="cursorCard">
+            <img src="cursor.png" alt="Cursor" class="character-image">
+            <div class="character-name">Cursor</div>
+        </div>
+        <div class="character-card" id="stickmanCard">
+            <img src="stickman.png" alt="Stickman" class="character-image">
+            <div class="character-name">Stickman</div>
+        </div>
+    </div>
+
+    <button class="play-button" id="playButton">
+        <span class="button-text">Play</span>
+        <span class="button-shadow"></span>
+    </button>
+
+    <div class="popup" id="popup">
+        <p>Game Over!</p>
+        <p id="scoreMessage">Congratulations Scroller, You have scrolled <span id="finalScore">0</span> pages</p>
+        <button id="restartButton">
+            <span class="button-text">Restart</span>
+            <span class="button-shadow"></span>
+        </button>
+    </div>
+
     <div class="game-info-section">
         <div class="game-info-content">
             <div class="dotted-line"></div>
@@ -230,19 +270,6 @@
                 <a href="privacy.html" class="privacy-link">Privacy Policy</a>
             </div>
         </div>
-    </div>
-
-    <button class="play-button" id="playButton">
-        <span class="button-text">Play</span>
-        <span class="button-shadow"></span>
-    </button>
-    <div class="popup" id="popup">
-        <p>Game Over!</p>
-        <p id="scoreMessage">Congratulations Scroller, You have scrolled <span id="finalScore">0</span> pages</p>
-        <button id="restartButton">
-            <span class="button-text">Restart</span>
-            <span class="button-shadow"></span>
-        </button>
     </div>
 
     <div class="social-share-sidebar">

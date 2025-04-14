@@ -16,6 +16,7 @@ const restartPopup = document.getElementById('popup');
 const hamburgerIcon = document.getElementById('hamburgerIcon');
 const mobileMenu = document.querySelector('.mobile-menu');
 const cursor = document.getElementById('cursor');
+const stickman = document.getElementById('stickman');
 const container = document.querySelector('.container');
 const content = document.querySelector('.content');
 const arrowButton = document.getElementById('arrowButton');
@@ -27,6 +28,10 @@ const finalScore = document.getElementById('finalScore');
 const mobileScoreValue = document.getElementById('mobileScoreValue');
 const mobileBestScoreValue = document.getElementById('mobileBestScoreValue');
 const helpPopup = document.getElementById('helpPopup');
+const stickmanToggle = document.getElementById('stickmanToggle');
+const cursorCard = document.getElementById('cursorCard');
+const stickmanCard = document.getElementById('stickmanCard');
+
 const lineHeight = 23;
 const containerHeight = container.clientHeight;
 const upperThreshold = containerHeight * 0.25;
@@ -39,6 +44,8 @@ let gameTimeout = null;
 let score = 0;
 let linesMoved = 0;
 let bestScore = localStorage.getItem('bestScore') || 0;
+let selectedCharacter = 'cursor'; // Default selection
+
 bestScoreValue.textContent = bestScore;
 mobileBestScoreValue.textContent = bestScore;
 
@@ -49,7 +56,6 @@ const maxPlacementsPerVisit = 5;
 let occupiedLines = new Set();
 
 const dictionaryWords = [
-    
     'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I',
     'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
     'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
@@ -159,6 +165,8 @@ const linesPerPage = totalLines / totalPages;
 const protectedLines = 24;
 const contentGenerationChunkSize = 100;
 
+cursor.style.display = 'none';
+stickman.style.display = 'none';
 helpPopup.style.display = 'none';
 helpPopup.style.opacity = '0';
 helpPopup.style.transition = 'opacity 0.3s ease';
@@ -196,6 +204,20 @@ document.addEventListener("DOMContentLoaded", () => {
         hamburgerIcon.classList.remove('active');
         mobileMenu.classList.remove('show');
     });
+
+    cursorCard.addEventListener('click', () => {
+        selectedCharacter = 'cursor';
+        cursorCard.classList.add('selected');
+        stickmanCard.classList.remove('selected');
+    });
+
+    stickmanCard.addEventListener('click', () => {
+        selectedCharacter = 'stickman';
+        stickmanCard.classList.add('selected');
+        cursorCard.classList.remove('selected');
+    });
+
+    cursorCard.classList.add('selected');
 
     if (window.innerWidth > 1020) {
         initShareSidebar();
@@ -237,6 +259,19 @@ function initCoreGame() {
             option.classList.add('selected');
         }
     });
+
+    stickmanToggle.checked = localStorage.getItem('stickmanEnabled') === 'true';
+    updateCharacterVisibility();
+}
+
+function updateCharacterVisibility() {
+    if (stickmanToggle.checked) {
+        cursor.style.display = 'none';
+        stickman.style.display = isGameStarted ? 'block' : 'none';
+    } else {
+        cursor.style.display = isGameStarted ? 'block' : 'none';
+        stickman.style.display = 'none';
+    }
 }
 
 function initUI() {
@@ -279,6 +314,11 @@ function initUI() {
             this.value = 1;
         }
     });
+
+    stickmanToggle.addEventListener('change', function() {
+        localStorage.setItem('stickmanEnabled', this.checked);
+        updateCharacterVisibility();
+    });
 }
 
 for (const [btnId, popupId] of Object.entries(popups)) {
@@ -289,6 +329,7 @@ for (const [btnId, popupId] of Object.entries(popups)) {
             if (restartPopup.style.display === 'block') {
                 restartPopup.style.display = 'none';
             }
+            document.querySelector('.character-selection').style.display = 'none';
             for (const popup of Object.values(popups)) {
                 const popupElement = document.getElementById(popup);
                 if (popup === popupId) {
@@ -661,7 +702,7 @@ function getRandomSpeed() {
     if (!isHardMode) {
         if (score <= 50) {
             const progress = score / 50;
-            baseSpeed = 5 + (progress * 10); // Start at 5x speed
+            baseSpeed = 1 + (progress * 10);
         } else {
             const post50Progress = Math.min(1, (score - 50) / 50);
             baseSpeed = 15 + (post50Progress * 5);
@@ -669,7 +710,7 @@ function getRandomSpeed() {
     } else {
         if (score <= 50) {
             const progress = score / 50;
-            baseSpeed = 5 + (progress * 15); // Start at 5x speed
+            baseSpeed = 1 + (progress * 15);
         } else {
             if (Math.random() < 0.005) {
                 baseSpeed = 20 + (Math.random() * 5);
@@ -685,12 +726,13 @@ function getRandomSpeed() {
     return parseFloat(baseSpeed.toFixed(1));
 }
 
-function isCursorOutOfBounds() {
-    const cursorRect = cursor.getBoundingClientRect();
+function isCharacterOutOfBounds() {
+    const currentCharacter = stickmanToggle.checked ? stickman : cursor;
+    const charRect = currentCharacter.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
     return (
-        cursorRect.top < containerRect.top ||
-        cursorRect.bottom > containerRect.bottom
+        charRect.top < containerRect.top ||
+        charRect.bottom > containerRect.bottom
     );
 }
 
@@ -718,6 +760,8 @@ function updateScore() {
 }
 
 function changeCursorColor() {
+    if (stickmanToggle.checked) return;
+    
     const colors = [
         'rgb(66, 133, 244)',
         'rgb(219, 68, 55)',
@@ -749,9 +793,10 @@ function handlePageTransition() {
     }, 500);
 }
 
-function moveCursor() {
+function moveCharacter() {
     const totalContentHeight = content.clientHeight;
     const lastLineThreshold = totalContentHeight - (24 * lineHeight);
+    const currentCharacter = stickmanToggle.checked ? stickman : cursor;
 
     if (topPosition >= lastLineThreshold) {
         handlePageTransition();
@@ -764,14 +809,14 @@ function moveCursor() {
     }
 
     if (topPosition + lineHeight <= totalContentHeight && topPosition >= 0) {
-        const randomLeft = Math.random() * (container.clientWidth - cursor.clientWidth);
-        cursor.style.left = `${randomLeft}px`;
+        const randomLeft = Math.random() * (container.clientWidth - currentCharacter.clientWidth);
+        currentCharacter.style.left = `${randomLeft}px`;
 
         if (isHardMode) {
             if (Math.random() < 0.08) {
                 topPosition += lineHeight * (Math.floor(Math.random() * 2) + 2);
             }
-            if (Math.random() < 0.05) {
+            if (Math.random() < 0.05 && !stickmanToggle.checked) {
                 changeCursorColor();
             }
         }
@@ -801,17 +846,20 @@ function moveCursor() {
             }
         }
 
-        // Fixed cursor alignment with lines
-        cursor.style.top = `${Math.floor(topPosition / lineHeight) * lineHeight}px`;
+        currentCharacter.style.top = `${Math.floor(topPosition / lineHeight) * lineHeight}px`;
 
         if (!soundToggle.checked) {
             cursorSound.currentTime = 0;
             cursorSound.play();
         }
 
-        if (isCursorOutOfBounds()) {
+        if (isCharacterOutOfBounds()) {
             container.classList.add('out-of-bounds');
-            cursor.classList.add('no-blink');
+            if (stickmanToggle.checked) {
+                stickman.style.display = 'none';
+            } else {
+                cursor.classList.add('no-blink');
+            }
             restartPopup.style.display = 'block';
             isGameOver = true;
             finalScore.textContent = score;
@@ -825,11 +873,13 @@ function moveCursor() {
 
         const randomSpeed = getRandomSpeed();
         const delay = isHardMode ? 650 / randomSpeed : 850 / randomSpeed;
-        gameTimeout = setTimeout(moveCursor, delay);
+        gameTimeout = setTimeout(moveCharacter, delay);
     }
     else {
-        cursor.style.display = 'none';
-        cursor.classList.add('no-blink');
+        currentCharacter.style.display = 'none';
+        if (!stickmanToggle.checked) {
+            cursor.classList.add('no-blink');
+        }
         container.classList.add('out-of-bounds');
         restartPopup.style.display = 'block';
         isGameOver = true;
@@ -859,6 +909,7 @@ function resetGame() {
     isGameStarted = true;
     isGameOver = false;
     playButton.style.display = 'none';
+    document.querySelector('.character-selection').style.display = 'none';
     isMovingDownward = true;
     upwardMovementCount = 0;
     linesMoved = 0;
@@ -866,14 +917,26 @@ function resetGame() {
     scoreValue.textContent = '0';
     mobileScoreValue.textContent = '0';
     
-    cursor.style.display = 'block';
+    cursor.style.display = 'none';
+    stickman.style.display = 'none';
+    
+    if (selectedCharacter === 'stickman') {
+        stickmanToggle.checked = true;
+        stickman.style.display = 'block';
+    } else {
+        stickmanToggle.checked = false;
+        cursor.style.display = 'block';
+    }
+    
     cursor.style.top = '0px';
     cursor.style.left = '0px';
+    stickman.style.top = '0px';
+    stickman.style.left = '0px';
     cursor.classList.remove('no-blink');
     
     container.scrollTop = 0;
     
-    moveCursor();
+    moveCharacter();
     
     const userTextContainer = document.getElementById("userTextContainer");
     const dictionaryContainer = document.getElementById("dictionaryWordsContainer");
@@ -935,14 +998,25 @@ function startGame() {
     if (!isGameStarted) {
         isGameStarted = true;
         playButton.style.display = 'none';
-        cursor.style.display = 'block';
+        document.querySelector('.character-selection').style.display = 'none';
+        
+        cursor.style.display = 'none';
+        stickman.style.display = 'none';
+        
+        if (selectedCharacter === 'stickman') {
+            stickmanToggle.checked = true;
+            stickman.style.display = 'block';
+        } else {
+            stickmanToggle.checked = false;
+            cursor.style.display = 'block';
+        }
         
         container.removeEventListener('scroll', preventScroll);
         container.removeEventListener('scroll', handleContainerScroll);
         document.removeEventListener('keydown', preventKeyScroll);
         container.removeEventListener('touchmove', preventTouchScroll);
         
-        moveCursor();
+        moveCharacter();
     }
 }
 
