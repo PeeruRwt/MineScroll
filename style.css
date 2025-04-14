@@ -576,7 +576,7 @@ body.dark-mode {
 .popup {
     display: none;
     position: absolute;
-    top: 50%;
+    top: 55%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
@@ -997,7 +997,7 @@ input:checked + .slider:before {
 .popup {
     display: none;
     position: absolute;
-    top: 56%;
+    top: 55%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
@@ -1564,13 +1564,19 @@ button,
   }
   
   .dark-mode .character-card {
-    background-color: #1e1e1e;
-  }
-  
-  .dark-mode .character-name {
-    color: #E0E0E0;
-  }
-  
-  .dark-mode .character-card.selected {
-    border-color: #8ab4f8;
-  }
+    background-color: #2d2d2d;
+    border-color: #444;
+}
+
+.dark-mode .character-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .character-name {
+    color: #e0e0e0;
+}
+
+.dark-mode .character-card.selected {
+    border: 2px solid #4285F4;
+}
+

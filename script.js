@@ -44,7 +44,7 @@ let gameTimeout = null;
 let score = 0;
 let linesMoved = 0;
 let bestScore = localStorage.getItem('bestScore') || 0;
-let selectedCharacter = 'cursor'; // Default selection
+let selectedCharacter = 'cursor'; 
 
 bestScoreValue.textContent = bestScore;
 mobileBestScoreValue.textContent = bestScore;
@@ -157,6 +157,7 @@ const dictionaryWords = [
     'throwing', 'understand', 'understands', 'understood', 'understanding', 'wake', 'wakes', 'woke', 'woken', 'waking',
     'wear', 'wears', 'wore', 'worn', 'wearing', 'win', 'wins', 'won', 'winning', 'write',
     'writes', 'wrote', 'written', 'writing'
+
 ];
 
 const totalPages = 625;
@@ -170,6 +171,13 @@ stickman.style.display = 'none';
 helpPopup.style.display = 'none';
 helpPopup.style.opacity = '0';
 helpPopup.style.transition = 'opacity 0.3s ease';
+
+function toggleCharacterSelection(show) {
+    const charSelection = document.querySelector('.character-selection');
+    if (charSelection) {
+        charSelection.style.display = show ? 'flex' : 'none';
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     if (!localStorage.getItem('hasVisitedBefore')) {
@@ -218,6 +226,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     cursorCard.classList.add('selected');
+
+    if (!isGameStarted) {
+        toggleCharacterSelection(true);
+    }
 
     if (window.innerWidth > 1020) {
         initShareSidebar();
@@ -329,7 +341,10 @@ for (const [btnId, popupId] of Object.entries(popups)) {
             if (restartPopup.style.display === 'block') {
                 restartPopup.style.display = 'none';
             }
-            document.querySelector('.character-selection').style.display = 'none';
+
+            if (!isGameStarted) {
+                toggleCharacterSelection(false);
+            }
             for (const popup of Object.values(popups)) {
                 const popupElement = document.getElementById(popup);
                 if (popup === popupId) {
@@ -359,6 +374,9 @@ for (const [btnId, popupId] of Object.entries(closeButtons)) {
             popupElement.style.opacity = '0';
             setTimeout(() => {
                 popupElement.style.display = 'none';
+                if (!isGameStarted && popupId !== 'leaderboardPopup') {
+                    toggleCharacterSelection(true);
+                }
                 if (restartPopup.style.display === 'none' && isGameOver) {
                     restartPopup.style.display = 'block';
                 }
@@ -385,6 +403,9 @@ document.addEventListener('click', (e) => {
             popupElement.style.opacity = '0';
             setTimeout(() => {
                 popupElement.style.display = 'none';
+                if (!isGameStarted) {
+                    toggleCharacterSelection(true);
+                }
             }, 300);
         }
         if (restartPopup.style.display === 'none' && isGameOver) {
@@ -460,6 +481,15 @@ darkModeToggle.addEventListener("change", function () {
     document.body.classList.toggle("dark-mode", this.checked);
     if (!localStorage.getItem('cursorColor')) {
         cursor.style.backgroundColor = this.checked ? 'white' : 'black';
+    }
+    const charSelection = document.querySelector('.character-selection');
+    if (charSelection) {
+        charSelection.style.display = 'none';
+        setTimeout(() => {
+            if (!isGameStarted) {
+                charSelection.style.display = 'flex';
+            }
+        }, 10);
     }
 });
 
