@@ -31,6 +31,7 @@ const helpPopup = document.getElementById('helpPopup');
 const stickmanToggle = document.getElementById('stickmanToggle');
 const cursorCard = document.getElementById('cursorCard');
 const stickmanCard = document.getElementById('stickmanCard');
+const treasureButton = document.getElementById('treasureButton');
 
 const lineHeight = 23;
 const containerHeight = container.clientHeight;
@@ -157,7 +158,6 @@ const dictionaryWords = [
     'throwing', 'understand', 'understands', 'understood', 'understanding', 'wake', 'wakes', 'woke', 'woken', 'waking',
     'wear', 'wears', 'wore', 'worn', 'wearing', 'win', 'wins', 'won', 'winning', 'write',
     'writes', 'wrote', 'written', 'writing'
-
 ];
 
 const totalPages = 625;
@@ -274,6 +274,10 @@ function initCoreGame() {
 
     stickmanToggle.checked = localStorage.getItem('stickmanEnabled') === 'true';
     updateCharacterVisibility();
+
+    if (localStorage.getItem('treasureUnlocked') === 'true') {
+        treasureButton.classList.add('unlocked');
+    }
 }
 
 function updateCharacterVisibility() {
@@ -785,6 +789,11 @@ function updateScore() {
                 mobileBestScoreValue.textContent = bestScore;
                 localStorage.setItem('bestScore', bestScore);
             }
+
+            if (score >= 50) {
+                treasureButton.classList.add('unlocked');
+                localStorage.setItem('treasureUnlocked', 'true');
+            }
         }
     }
 }
@@ -1091,6 +1100,10 @@ container.addEventListener('touchmove', (event) => {
         touchStartY = touchEndY;
         event.preventDefault();
     }
+});
+
+treasureButton.addEventListener('click', function() {
+    window.location.href = 'buy.html';
 });
 
 function initShareSidebar() {

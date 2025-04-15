@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MineScroll is an exciting, fun and simple scrolling game where you control a cursor and try to keep it within the game boundaries.">
+    <meta name="keywords" content="scrolling game, MineScroll, IndieGame, web game, HTML5 game, WebGame, CasualGame, GameDev, PlayNow, BrowserGame">
+    <meta name="author" content="Peeru">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="MineScroll - Game Shop">
+    <meta property="og:description" content="Purchase game treasures and upgrades for MineScroll">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://MineScroll.com/buy.html">
+    <meta property="og:image" content="https://MineScroll.com/images/preview.jpg">
+    <meta property="og:site_name" content="MineScroll">
+    <meta name="theme-color" content="#4285F4">
+    <meta name="msapplication-TileImage" content="favicon.png">
+    <meta name="msapplication-TileColor" content="#4285F4">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>MineScroll - Game shop</title>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;500;600;700&display=swap" as="style">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="favicon.png" type="image/x-icon">
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <style>
+        * {
+            font-family: 'Kodchasan', sans-serif;
+            user-select: none;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: #000;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #D2B48C;
+        }
+
+        .game-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #D2B48C;
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+
+        .play-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            background-color: #D2B48C;
+            color: #1f2937;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .play-button:hover {
+            background-color: #F5F5DC;
+        }
+
+        .shop-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .commission-text {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .product-card {
+            background-color: #F5F5DC;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .product-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+
+        .product-description {
+            font-size: 16px;
+            color: #1f2937;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .buy-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            background-color: #D2B48C;
+            color: #1f2937;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .buy-button:hover {
+            background-color: #e6d8a8;
+        }
+
+        .footer-line {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto 0 auto;
+            border-top: 1px solid #D2B48C;
+        }
+
+        .copyright {
+            width: 100%;
+            max-width: 500px;
+            margin: 10px auto 30px auto;
+            text-align: center;
+            font-size: 14px;
+            color: #D2B48C;
+        }
+
+        @media (max-width: 480px) {
+            .shop-container {
+                padding: 15px;
+            }
+            
+            .game-title {
+                font-size: 24px;
+            }
+            
+            .play-button {
+                font-size: 16px;
+                padding: 8px 16px;
+            }
+            
+            .product-title {
+                font-size: 20px;
+            }
+            
+            .product-price {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="game-title">MineScroll</div>
+        <button class="play-button" id="playNowButton">Play Now</button>
+    </div>
+
+    <div class="shop-container">
+        <p class="commission-text">We earn a commission on every product you purchase, and you get to have fun while playing. It's a win-win for both of us!</p>
+        
+        <div class="product-card">
+            <div class="product-title">Java Burn Supplement</div>
+            <div class="product-description">
+                Java Burn is a natural, tasteless supplement that you mix with coffee to boost metabolism and burn fat.
+            </div>
+            <button class="buy-button" onclick="window.open('https://tinyurl.com/4pd8w7rt', '_blank')">Buy Now</button>
+        </div>
+    </div>
+
+    <div class="footer-line"></div>
+    <div class="copyright">© 2025 MineScroll. All rights reserved</div>
+
+    <script>
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
+
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'darkMode') {
+                if (event.newValue === 'enabled') {
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                }
+            }
+        });
+
+        document.getElementById('playNowButton').addEventListener('click', function() {
+            const gameState = localStorage.getItem('gameState');
+            
+            if (gameState === 'gameOver') {
+                window.location.href = 'index.html#gameOver';
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-NS1QKXE79H');
+    </script>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NS1QKXE79H"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8471713659225731" crossorigin="anonymous"></script>
+</body>
+</html>

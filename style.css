@@ -1580,3 +1580,37 @@ button,
     border: 2px solid #4285F4;
 }
 
+.treasure-button {
+    width: 400px;
+    margin: 20px auto;
+    padding: 15px 0;
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    background-color: #D2B48C;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.treasure-button.unlocked {
+    opacity: 1;
+    pointer-events: auto;
+    background-color: #F4B400;
+}
+
+.treasure-button.unlocked:hover {
+    background-color: #D2B48C;
+}
+
+@media (max-width: 480px) {
+    .treasure-button {
+        width: 90vw;
+        max-width: 400px;
+    }
+}
+
