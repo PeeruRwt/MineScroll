@@ -28,7 +28,6 @@ const finalScore = document.getElementById('finalScore');
 const mobileScoreValue = document.getElementById('mobileScoreValue');
 const mobileBestScoreValue = document.getElementById('mobileBestScoreValue');
 const helpPopup = document.getElementById('helpPopup');
-const stickmanToggle = document.getElementById('stickmanToggle');
 const cursorCard = document.getElementById('cursorCard');
 const stickmanCard = document.getElementById('stickmanCard');
 const treasureButton = document.getElementById('treasureButton');
@@ -158,6 +157,7 @@ const dictionaryWords = [
     'throwing', 'understand', 'understands', 'understood', 'understanding', 'wake', 'wakes', 'woke', 'woken', 'waking',
     'wear', 'wears', 'wore', 'worn', 'wearing', 'win', 'wins', 'won', 'winning', 'write',
     'writes', 'wrote', 'written', 'writing'
+
 ];
 
 const totalPages = 625;
@@ -272,16 +272,13 @@ function initCoreGame() {
         }
     });
 
-    stickmanToggle.checked = localStorage.getItem('stickmanEnabled') === 'true';
-    updateCharacterVisibility();
-
     if (localStorage.getItem('treasureUnlocked') === 'true') {
         treasureButton.classList.add('unlocked');
     }
 }
 
 function updateCharacterVisibility() {
-    if (stickmanToggle.checked) {
+    if (selectedCharacter === 'stickman') {
         cursor.style.display = 'none';
         stickman.style.display = isGameStarted ? 'block' : 'none';
     } else {
@@ -329,11 +326,6 @@ function initUI() {
         } else if (value < 1) {
             this.value = 1;
         }
-    });
-
-    stickmanToggle.addEventListener('change', function() {
-        localStorage.setItem('stickmanEnabled', this.checked);
-        updateCharacterVisibility();
     });
 }
 
@@ -761,7 +753,7 @@ function getRandomSpeed() {
 }
 
 function isCharacterOutOfBounds() {
-    const currentCharacter = stickmanToggle.checked ? stickman : cursor;
+    const currentCharacter = selectedCharacter === 'stickman' ? stickman : cursor;
     const charRect = currentCharacter.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
     return (
@@ -799,7 +791,7 @@ function updateScore() {
 }
 
 function changeCursorColor() {
-    if (stickmanToggle.checked) return;
+    if (selectedCharacter === 'stickman') return;
     
     const colors = [
         'rgb(66, 133, 244)',
@@ -835,7 +827,7 @@ function handlePageTransition() {
 function moveCharacter() {
     const totalContentHeight = content.clientHeight;
     const lastLineThreshold = totalContentHeight - (24 * lineHeight);
-    const currentCharacter = stickmanToggle.checked ? stickman : cursor;
+    const currentCharacter = selectedCharacter === 'stickman' ? stickman : cursor;
 
     if (topPosition >= lastLineThreshold) {
         handlePageTransition();
@@ -855,7 +847,7 @@ function moveCharacter() {
             if (Math.random() < 0.08) {
                 topPosition += lineHeight * (Math.floor(Math.random() * 2) + 2);
             }
-            if (Math.random() < 0.05 && !stickmanToggle.checked) {
+            if (Math.random() < 0.05 && selectedCharacter !== 'stickman') {
                 changeCursorColor();
             }
         }
@@ -894,7 +886,7 @@ function moveCharacter() {
 
         if (isCharacterOutOfBounds()) {
             container.classList.add('out-of-bounds');
-            if (stickmanToggle.checked) {
+            if (selectedCharacter === 'stickman') {
                 stickman.style.display = 'none';
             } else {
                 cursor.classList.add('no-blink');
@@ -916,7 +908,7 @@ function moveCharacter() {
     }
     else {
         currentCharacter.style.display = 'none';
-        if (!stickmanToggle.checked) {
+        if (selectedCharacter !== 'stickman') {
             cursor.classList.add('no-blink');
         }
         container.classList.add('out-of-bounds');
@@ -960,10 +952,8 @@ function resetGame() {
     stickman.style.display = 'none';
     
     if (selectedCharacter === 'stickman') {
-        stickmanToggle.checked = true;
         stickman.style.display = 'block';
     } else {
-        stickmanToggle.checked = false;
         cursor.style.display = 'block';
     }
     
@@ -1043,10 +1033,8 @@ function startGame() {
         stickman.style.display = 'none';
         
         if (selectedCharacter === 'stickman') {
-            stickmanToggle.checked = true;
             stickman.style.display = 'block';
         } else {
-            stickmanToggle.checked = false;
             cursor.style.display = 'block';
         }
         
